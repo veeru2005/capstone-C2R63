@@ -61,7 +61,10 @@ def fetch_allocation(window: str = "7d", base_url: str | None = None,
             log.warning("OpenCost attempt %d/%d failed: %s", attempt, retries, exc)
             if attempt < retries:
                 time.sleep(min(2 ** attempt, 8))
-    raise OpenCostUnavailable(f"OpenCost unreachable at {url}: {last_err}")
+    msg = str(last_err)
+    reason = ("connection refused — is ./start.sh live running?" if "refused" in msg
+              else "timed out" if "timed out" in msg.lower() else msg[:120])
+    raise OpenCostUnavailable(f"OpenCost not reachable at {url} ({reason})")
 
 
 def save_raw(payload: dict, run_id: str, raw_dir: Path) -> tuple[Path, str]:

@@ -23,6 +23,7 @@ warn() { printf "\033[1;33m!!  %s\033[0m\n" "$*"; }
 cleanup() {
   echo; say "Stopping..."
   for p in "${PIDS[@]:-}"; do [ -n "$p" ] && kill "$p" 2>/dev/null || true; done
+  pkill -f "port-forward -n opencost service/opencost 9003" 2>/dev/null || true
   exit 0
 }
 trap cleanup INT TERM
@@ -105,10 +106,16 @@ PY
   live)
     ensure_backend; ensure_frontend
     docker info >/dev/null 2>&1 || { warn "Docker Desktop is not running. Start it, then re-run."; exit 1; }
+    # Always talk to OUR cluster, even if Docker Desktop switched kubectl to another one
+    kind get clusters 2>/dev/null | grep -qx finops && kubectl config use-context kind-finops >/dev/null 2>&1
     kubectl get --raw /healthz >/dev/null 2>&1 || { warn "No Kubernetes cluster. Run: ./start.sh setup"; exit 1; }
     free_port 9003
     say "Port-forwarding OpenCost API -> localhost:9003 (UI -> localhost:9090)"
-    kubectl port-forward -n opencost service/opencost 9003:9003 9090:9090 >"$LOGS/port-forward.log" 2>&1 &
+    # keep the tunnel alive: if Docker / the cluster restarts, reconnect automatically
+    ( while true; do
+        kubectl --context kind-finops port-forward -n opencost service/opencost 9003:9003 9090:9090 >>"$LOGS/port-forward.log" 2>&1
+        echo "port-forward stopped, reconnecting in 3 s" >>"$LOGS/port-forward.log"; sleep 3
+      done ) &
     PIDS+=($!)
     sleep 3
     export FINOPS_DB_PATH="$BE/finops_live.db"
