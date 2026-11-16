@@ -1,9 +1,9 @@
-/* Fredoka is the only font used on the site (variable font in public/fonts, SIL Open Font License).
-   One file covers every weight from 300 (light) to 700 (bold). */
+/* Parkinsans is the only font used on the site (variable font in public/fonts, SIL Open Font License).
+   One file covers every weight from 300 (light) to 800 (extra bold). */
 @font-face {
-  font-family: 'Fredoka';
-  src: url('/fonts/Fredoka-Variable.ttf') format('truetype');
-  font-weight: 300 700;
+  font-family: 'Parkinsans';
+  src: url('/fonts/Parkinsans-Variable.ttf') format('truetype');
+  font-weight: 300 800;
   font-style: normal;
   font-display: swap;
 }
@@ -25,14 +25,14 @@
 }
 
 html, body {
-  font-family: 'Fredoka', sans-serif;
+  font-family: 'Parkinsans', sans-serif;
   background-color: #121214;
   color: #ffffff;
   margin: 0;
   padding: 0;
 }
 
-/* No other fonts anywhere: form controls, code blocks and SVG chart text use Fredoka too */
-button, input, select, textarea, code, pre, kbd, samp, svg text {
-  font-family: 'Fredoka', sans-serif;
+/* No other fonts anywhere: form controls, code blocks and SVG chart text use Parkinsans too */
+*, *::before, *::after, button, input, select, option, textarea, code, pre, kbd, samp, svg, svg text {
+  font-family: 'Parkinsans', sans-serif;
 }

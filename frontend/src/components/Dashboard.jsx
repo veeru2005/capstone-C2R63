@@ -15,7 +15,7 @@ import SettingsView from "./SettingsView";
 import { API_BASE, getJSON } from "../api";
 
 const TITLES = {
-  home: ["Overview", "Visibility → Intelligence → Action, on one screen"],
+  home: ["Overview", "Visibility › Intelligence › Action, on one screen"],
   live: ["Live Cluster", "What is running right now and whether it is wasting money"],
   allocation: ["Cost Allocation (O1)", "Who is spending how much — by team, namespace and workload"],
   trends: ["Spend Trends (O2 reference)", "Daily spend, moving average, week-over-week change"],

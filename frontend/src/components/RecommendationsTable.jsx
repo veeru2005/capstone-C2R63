@@ -26,7 +26,7 @@ export default function RecommendationsTable({ data, currency = "USD" }) {
     }
     if (r.includes("COMMITMENT")) {
       return {
-        badge: "Stable spend → commit",
+        badge: "Stable spend: commit",
         action: "Buy 1-year committed use / reserved capacity for the baseline",
         style: "bg-blue-500/20 text-blue-400 border-blue-500/30",
       };
@@ -100,7 +100,7 @@ export default function RecommendationsTable({ data, currency = "USD" }) {
                     <td className="py-3 px-4 text-slate-300 font-medium max-w-md">
                       {diag.action}
                       {row.detail && <div className="text-[11px] font-normal text-slate-400 mt-0.5">{row.detail}</div>}
-                      {row.safety_note && <div className="text-[11px] font-normal text-amber-300/80 mt-0.5">⚠ {row.safety_note}</div>}
+                      {row.safety_note && <div className="text-[11px] font-normal text-amber-300/80 mt-0.5">Safety: {row.safety_note}</div>}
                     </td>
                     <td className="py-3 px-4 text-right font-mono font-extrabold">
                       {savings > 0 ? (

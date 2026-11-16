@@ -8,9 +8,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Fredoka', 'sans-serif'],
-        mono: ['Fredoka', 'sans-serif'],
-        serif: ['Fredoka', 'sans-serif'],
+        sans: ['Parkinsans', 'sans-serif'],
+        mono: ['Parkinsans', 'sans-serif'],
+        serif: ['Parkinsans', 'sans-serif'],
       },
       colors: {
         finops: {

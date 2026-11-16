@@ -127,7 +127,7 @@ export default function SettingsView({ currency, setCurrency, autoRefresh, setAu
           <div>
             <Row label="Backend API" value={apiOk === null ? "checking…" : apiOk ? `connected · ${API_BASE || window.location.origin}` : "not reachable"} good={apiOk ?? undefined} />
             <Row label="Data source" value={!health ? "—" : health.data_source === "opencost" ? "LIVE — OpenCost" : health.data_source === "simulator" ? "SANDBOX — simulated 90 days" : health.data_source || "no data"} />
-            <Row label="Data range" value={health?.data_start ? `${health.data_start} → ${health.data_end}` : "—"} />
+            <Row label="Data range" value={health?.data_start ? `${health.data_start} – ${health.data_end}` : "—"} />
             <Row label="Last successful sync" value={health?.last_successful_ingest ? new Date(health.last_successful_ingest).toLocaleString() : "—"} />
             <Row label="Status" value={health?.status === "ok" ? "OK" : health?.status === "degraded" ? `Degraded: ${health.reasons?.join("; ")}` : health?.status || "—"} good={health ? health.status === "ok" : undefined} />
           </div>

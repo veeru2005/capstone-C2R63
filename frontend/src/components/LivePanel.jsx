@@ -90,7 +90,7 @@ export default function LivePanel({ currency }) {
                 <tr className="border-b border-[#28282e] text-slate-300 uppercase text-[10px] font-bold bg-[#16171d]">
                   <th className="py-2.5 px-4">Namespace / Workload</th>
                   <th className="py-2.5 px-4">Team</th>
-                  <th className="py-2.5 px-4 text-right">CPU req → used</th>
+                  <th className="py-2.5 px-4 text-right">CPU reserved / used</th>
                   <th className="py-2.5 px-4 text-right">Efficiency</th>
                   <th className="py-2.5 px-4 text-right">Cost (10 min)</th>
                   <th className="py-2.5 px-4">Status</th>
@@ -106,7 +106,7 @@ export default function LivePanel({ currency }) {
                     </td>
                     <td className="py-2.5 px-4 text-slate-300">{w.team}</td>
                     <td className="py-2.5 px-4 text-right font-mono">
-                      {(w.cpu_request ?? 0).toFixed(3)} → {(w.cpu_usage ?? 0).toFixed(4)}
+                      {(w.cpu_request ?? 0).toFixed(3)} / {(w.cpu_usage ?? 0).toFixed(4)}
                     </td>
                     <td className="py-2.5 px-4 text-right font-mono">{fmtPct(w.efficiency_pct, 2)}</td>
                     <td className="py-2.5 px-4 text-right font-mono">{formatCurrency(w.total_cost, currency)}</td>

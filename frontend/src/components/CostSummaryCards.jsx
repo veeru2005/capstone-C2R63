@@ -12,7 +12,7 @@ export default function CostSummaryCards({ summary, recommendations = [], curren
     {
       label: "Total cluster cost",
       value: formatCurrency(total, currency),
-      sub: summary?.start ? `${summary.start} → ${summary.end}` : "",
+      sub: summary?.start ? `${summary.start} – ${summary.end}` : "",
       icon: Wallet,
       color: "text-blue-400",
     },

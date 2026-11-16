@@ -24,7 +24,7 @@ export default function HealthBanner({ health }) {
         {live ? "LIVE — OpenCost on Kubernetes" : "SANDBOX — simulated 90-day cluster history (OpenCost format)"}
       </span>
       <span>
-        Data: {health.data_start} → {health.data_end}
+        Data: {health.data_start} – {health.data_end}
       </span>
       {health.last_successful_ingest && <span>Last sync: {new Date(health.last_successful_ingest).toLocaleString()}</span>}
       {degraded && (

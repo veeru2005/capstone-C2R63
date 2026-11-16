@@ -73,7 +73,7 @@ export default function KpiPanel() {
 
       <div className={`text-xs rounded border p-3 ${rec.reconciled ? "border-emerald-900 text-emerald-300" : "border-rose-900 text-rose-300"}`}>
         Attribution check: team, namespace and workload views all add up to the same cluster total
-        (max difference {rec.max_abs_diff} USD) → {rec.reconciled ? "PASS" : "FAIL"}
+        (max difference {rec.max_abs_diff} USD): {rec.reconciled ? "PASS" : "FAIL"}
       </div>
     </div>
   );
