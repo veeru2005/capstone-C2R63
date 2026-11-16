@@ -246,6 +246,18 @@ def live(window: str = Query("10m", pattern="^[0-9]+[mhd]$")):
                 "workloads": []}
 
 
+@app.get("/live/timeline", tags=["Live"])
+def live_timeline(minutes: int = Query(60, ge=10, le=240)):
+    """Last N minutes at 2-minute resolution with SPIKE / GROWING detection and a
+    30-minute forecast per workload (see finops/live.py)."""
+    from finops import live as live_mod
+    try:
+        res = live_mod.analyse(live_mod.fetch_timeline(minutes=minutes))
+        return {"connected": True, **res}
+    except opencost.OpenCostUnavailable as exc:
+        return {"connected": False, "error": str(exc)[:300], "events": [], "workloads": []}
+
+
 @app.get("/costs", response_model=List[CostRecord], tags=["Costs"])
 def get_costs(app_name: Optional[str] = None, namespace: Optional[str] = None, team: Optional[str] = None,
               start_date: Optional[str] = None, end_date: Optional[str] = None,

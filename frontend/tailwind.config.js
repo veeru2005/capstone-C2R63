@@ -8,9 +8,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Utendo', 'sans-serif'],
-        mono: ['Utendo', 'sans-serif'],
-        serif: ['Utendo', 'sans-serif'],
+        sans: ['Poppins', 'sans-serif'],
+        mono: ['Poppins', 'sans-serif'],
+        serif: ['Poppins', 'sans-serif'],
       },
       colors: {
         finops: {

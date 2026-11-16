@@ -1,0 +1,121 @@
+# DEMO LAB — four containers, each showing ONE behaviour on the dashboard.
+# Use together with k8s/demo-new-app.yaml (the idle one). Easiest: ./scripts/demo.sh up
+#
+#   app               what it does                         dashboard shows
+#   ---------------   ----------------------------------   ------------------------------------
+#   forgotten-test-app  reserves 1 CPU, does nothing        IDLE                (demo-new-app.yaml)
+#   oversized-api     reserves 1 CPU, uses ~0.1 CPU         OVER-PROVISIONED + RIGHT-SIZE advice
+#   steady-worker     reserves 0.2 CPU, uses ~0.15 CPU      OK (healthy baseline, flat forecast)
+#   growing-job       CPU use climbs for 30 min             GROWING + rising forecast
+#   spike-service     normal ~0.2 CPU; ./scripts/demo.sh spike scales it 1 -> 6 replicas   SPIKE
+#
+# All run a tiny Python loop that burns a chosen fraction of one CPU core.
+---
+apiVersion: v1
+kind: Namespace
+metadata: { name: demo, labels: { team: demo-team } }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata: { name: cpu-burner, namespace: demo }
+data:
+  burn.py: |
+    # Burns CPU_START cores, rising linearly to CPU_END over RAMP_MINUTES (0 = constant).
+    import os, time
+    start = float(os.environ.get("CPU_START", "0.1"))
+    end = float(os.environ.get("CPU_END", start))
+    ramp = float(os.environ.get("RAMP_MINUTES", "0"))
+    t0 = time.time()
+    print(f"burning {start} -> {end} cores over {ramp} min", flush=True)
+    while True:
+        minutes = (time.time() - t0) / 60
+        target = end if ramp <= 0 else min(end, start + (end - start) * minutes / ramp)
+        busy = min(max(target, 0.0), 0.95) * 0.1
+        s = time.time()
+        while time.time() - s < busy:
+            pass
+        time.sleep(max(0.1 - busy, 0.0))
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: oversized-api, namespace: demo }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: oversized-api } }
+  template:
+    metadata: { labels: { app: oversized-api, team: demo-team } }
+    spec:
+      containers:
+        - name: app
+          image: python:3.12-alpine
+          command: ["python", "/burn/burn.py"]
+          env: [{ name: CPU_START, value: "0.1" }]
+          resources:
+            requests: { cpu: "1", memory: 256Mi }
+            limits: { cpu: "1", memory: 256Mi }
+          volumeMounts: [{ name: burn, mountPath: /burn }]
+      volumes: [{ name: burn, configMap: { name: cpu-burner } }]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: steady-worker, namespace: demo }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: steady-worker } }
+  template:
+    metadata: { labels: { app: steady-worker, team: demo-team } }
+    spec:
+      containers:
+        - name: app
+          image: python:3.12-alpine
+          command: ["python", "/burn/burn.py"]
+          env: [{ name: CPU_START, value: "0.15" }]
+          resources:
+            requests: { cpu: 200m, memory: 64Mi }
+            limits: { cpu: 400m, memory: 128Mi }
+          volumeMounts: [{ name: burn, mountPath: /burn }]
+      volumes: [{ name: burn, configMap: { name: cpu-burner } }]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: growing-job, namespace: demo }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: growing-job } }
+  template:
+    metadata: { labels: { app: growing-job, team: demo-team } }
+    spec:
+      containers:
+        - name: app
+          image: python:3.12-alpine
+          command: ["python", "/burn/burn.py"]
+          # starts small and keeps using more CPU for 30 minutes (like a memory/CPU leak or growing traffic)
+          env:
+            - { name: CPU_START, value: "0.05" }
+            - { name: CPU_END, value: "0.9" }
+            - { name: RAMP_MINUTES, value: "30" }
+          resources:
+            requests: { cpu: 100m, memory: 64Mi }
+            limits: { cpu: "1", memory: 128Mi }
+          volumeMounts: [{ name: burn, mountPath: /burn }]
+      volumes: [{ name: burn, configMap: { name: cpu-burner } }]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: spike-service, namespace: demo }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: spike-service } }
+  template:
+    metadata: { labels: { app: spike-service, team: demo-team } }
+    spec:
+      containers:
+        - name: app
+          image: python:3.12-alpine
+          command: ["python", "/burn/burn.py"]
+          env: [{ name: CPU_START, value: "0.2" }]
+          resources:
+            requests: { cpu: 250m, memory: 64Mi }
+            limits: { cpu: 500m, memory: 128Mi }
+          volumeMounts: [{ name: burn, mountPath: /burn }]
+      volumes: [{ name: burn, configMap: { name: cpu-burner } }]
