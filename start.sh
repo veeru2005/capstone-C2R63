@@ -51,7 +51,7 @@ free_port() {  # stop a leftover run of OUR app on this port; never touch Docker
   for pid in $pids; do
     cmd=$(ps -p "$pid" -o comm= 2>/dev/null || true)
     case "$cmd" in
-      *uvicorn*|*python*|*node*|*kubectl*)
+      *uvicorn*|*python*|*Python*|*node*|*kubectl*)
         warn "Port $1 busy (old $cmd, pid $pid) — stopping it"; kill "$pid" 2>/dev/null || true; sleep 1 ;;
       *)
         warn "Port $1 is used by '$cmd' (pid $pid)."
@@ -68,7 +68,7 @@ free_port() {  # stop a leftover run of OUR app on this port; never touch Docker
 start_backend() {
   free_port 8000
   say "Starting backend  -> http://localhost:8000/docs   (log: logs/backend.log)"
-  (cd "$BE" && exec env "$@" venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000) >"$LOGS/backend.log" 2>&1 &
+  (cd "$BE" && exec env "$@" venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000 --reload --reload-exclude 'venv/*' --reload-exclude 'tests/*') >"$LOGS/backend.log" 2>&1 &
   PIDS+=($!)
   for _ in $(seq 1 30); do curl -sf localhost:8000/health >/dev/null && return 0; sleep 0.5; done
   warn "Backend did not start. Last lines of logs/backend.log:"; tail -5 "$LOGS/backend.log"

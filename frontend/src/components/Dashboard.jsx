@@ -19,11 +19,11 @@ import { API_BASE, getJSON } from "../api";
 const TITLES = {
   home: ["Overview", "Visibility › Intelligence › Action, on one screen"],
   live: ["Live Cluster", "What is running right now and whether it is wasting money"],
-  allocation: ["Cost Allocation (O1)", "Who is spending how much — by team, namespace and workload"],
-  trends: ["Spend Trends (O2 reference)", "Daily spend, moving average, week-over-week change"],
-  anomalies: ["Anomalies (O3)", "Days where a workload cost much more than its own recent normal"],
-  forecast: ["Forecast (O3)", "Next 14 days of cost per workload"],
-  recommendations: ["Savings (O4)", "Idle, right-size and commitment recommendations with ₹/$ impact"],
+  allocation: ["Cost Allocation", "Objective O1 · who is spending how much, by team, namespace and workload"],
+  trends: ["Spend Trends", "Objective O2 (reference) · daily spend, moving average, week-over-week change"],
+  anomalies: ["Anomalies", "Objective O3 · days (and live minutes) where a workload cost much more than its own normal"],
+  forecast: ["Forecast", "Objective O3 · next 14 days per workload (live: next 30 minutes)"],
+  recommendations: ["Savings", "Objective O4 · idle, right-size and commitment recommendations with ₹/$ impact"],
   evaluation: ["Evaluation (KPIs)", "Reference vs our method on identical data"],
   settings: ["Settings", "Display preferences, data connection and detection rules"],
 };

@@ -17,7 +17,7 @@ export default function LiveTimeline({ currency, onStatus }) {
       setData(d);
       onStatus?.(Object.fromEntries((d.workloads || []).map((w) => [`${w.namespace}/${w.workload}`, w.status])));
     } catch {
-      setData(null);
+      setData({ unavailable: true });
     }
   }, [onStatus]);
 
@@ -38,7 +38,24 @@ export default function LiveTimeline({ currency, onStatus }) {
     return [...r, ...selected.forecast.map((f) => ({ t: f.t, forecast: f.rate }))];
   }, [selected]);
 
-  if (!data?.connected || !workloads.length) return null;
+  if (!data) return null;
+  if (data.unavailable) {
+    return (
+      <div className="rounded border border-amber-800 bg-amber-950/30 p-3 text-xs text-amber-200">
+        <b>Live timeline is not available from the backend.</b> The backend is probably an older run — stop{" "}
+        <code>./start.sh live</code> with Ctrl+C and start it again.
+      </div>
+    );
+  }
+  if (!data.connected) return null;
+  if (!workloads.length) {
+    return (
+      <div className="rounded border border-[#28282e] bg-[#16171d] p-3 text-xs text-slate-300">
+        <b>Live timeline: collecting data…</b> OpenCost publishes data with a few minutes' delay. New
+        containers appear here within ~5 minutes; spikes need ~10 minutes of normal data first.
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-3">
