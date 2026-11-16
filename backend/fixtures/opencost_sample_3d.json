@@ -1,0 +1,936 @@
+{
+ "code": 200,
+ "status": "success",
+ "data": [
+  {
+   "payments/api-gateway": {
+    "name": "payments/api-gateway",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "payments",
+     "controller": "api-gateway",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "payments-team",
+      "app": "api-gateway"
+     }
+    },
+    "window": {
+     "start": "2026-10-29T00:00:00Z",
+     "end": "2026-10-30T00:00:00Z"
+    },
+    "start": "2026-10-29T00:00:00Z",
+    "end": "2026-10-30T00:00:00Z",
+    "cpuCoreRequestAverage": 1.500221,
+    "cpuCoreUsageAverage": 1.12454,
+    "ramByteRequestAverage": 3221700984,
+    "ramByteUsageAverage": 2600460038,
+    "cpuCost": 1.138164,
+    "ramCost": 0.305109,
+    "pvCost": 0.0024,
+    "networkCost": 0.0,
+    "totalCost": 1.445673,
+    "totalEfficiency": 0.761757
+   },
+   "payments/payment-service": {
+    "name": "payments/payment-service",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "payments",
+     "controller": "payment-service",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "payments-team",
+      "app": "payment-service"
+     }
+    },
+    "window": {
+     "start": "2026-10-29T00:00:00Z",
+     "end": "2026-10-30T00:00:00Z"
+    },
+    "start": "2026-10-29T00:00:00Z",
+    "end": "2026-10-30T00:00:00Z",
+    "cpuCoreRequestAverage": 1.366411,
+    "cpuCoreUsageAverage": 0.952352,
+    "ramByteRequestAverage": 2934345760,
+    "ramByteUsageAverage": 2122502009,
+    "cpuCost": 1.036647,
+    "ramCost": 0.277895,
+    "pvCost": 0.0016,
+    "networkCost": 0.0,
+    "totalCost": 1.316142,
+    "totalEfficiency": 0.702545
+   },
+   "catalog/overprovisioned-app": {
+    "name": "catalog/overprovisioned-app",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "catalog",
+     "controller": "overprovisioned-app",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "catalog-team",
+      "app": "overprovisioned-app"
+     }
+    },
+    "window": {
+     "start": "2026-10-29T00:00:00Z",
+     "end": "2026-10-30T00:00:00Z"
+    },
+    "start": "2026-10-29T00:00:00Z",
+    "end": "2026-10-30T00:00:00Z",
+    "cpuCoreRequestAverage": 2.0,
+    "cpuCoreUsageAverage": 0.004617,
+    "ramByteRequestAverage": 4294967296,
+    "ramByteUsageAverage": 134513243,
+    "cpuCost": 1.517328,
+    "ramCost": 0.406752,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 1.92408,
+    "totalEfficiency": 0.008441
+   },
+   "catalog/rightsized-app": {
+    "name": "catalog/rightsized-app",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "catalog",
+     "controller": "rightsized-app",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "catalog-team",
+      "app": "rightsized-app"
+     }
+    },
+    "window": {
+     "start": "2026-10-29T00:00:00Z",
+     "end": "2026-10-30T00:00:00Z"
+    },
+    "start": "2026-10-29T00:00:00Z",
+    "end": "2026-10-30T00:00:00Z",
+    "cpuCoreRequestAverage": 0.1,
+    "cpuCoreUsageAverage": 0.077637,
+    "ramByteRequestAverage": 268435456,
+    "ramByteUsageAverage": 204527005,
+    "cpuCost": 0.075866,
+    "ramCost": 0.025422,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 0.101288,
+    "totalEfficiency": 0.772747
+   },
+   "catalog/search-service": {
+    "name": "catalog/search-service",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "catalog",
+     "controller": "search-service",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "catalog-team",
+      "app": "search-service"
+     }
+    },
+    "window": {
+     "start": "2026-10-29T00:00:00Z",
+     "end": "2026-10-30T00:00:00Z"
+    },
+    "start": "2026-10-29T00:00:00Z",
+    "end": "2026-10-30T00:00:00Z",
+    "cpuCoreRequestAverage": 1.073476,
+    "cpuCoreUsageAverage": 0.647481,
+    "ramByteRequestAverage": 4610545634,
+    "ramByteUsageAverage": 3727927159,
+    "cpuCost": 0.814408,
+    "ramCost": 0.436639,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 1.251047,
+    "totalEfficiency": 0.674852
+   },
+   "analytics/idle-app": {
+    "name": "analytics/idle-app",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "analytics",
+     "controller": "idle-app",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "data-team",
+      "app": "idle-app"
+     }
+    },
+    "window": {
+     "start": "2026-10-29T00:00:00Z",
+     "end": "2026-10-30T00:00:00Z"
+    },
+    "start": "2026-10-29T00:00:00Z",
+    "end": "2026-10-30T00:00:00Z",
+    "cpuCoreRequestAverage": 0.75,
+    "cpuCoreUsageAverage": 0.003777,
+    "ramByteRequestAverage": 1073741824,
+    "ramByteUsageAverage": 20258144,
+    "cpuCost": 0.568998,
+    "ramCost": 0.101688,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 0.670686,
+    "totalEfficiency": 0.007133
+   },
+   "analytics/batch-reporter": {
+    "name": "analytics/batch-reporter",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "analytics",
+     "controller": "batch-reporter",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "data-team",
+      "app": "batch-reporter"
+     }
+    },
+    "window": {
+     "start": "2026-10-29T00:00:00Z",
+     "end": "2026-10-30T00:00:00Z"
+    },
+    "start": "2026-10-29T00:00:00Z",
+    "end": "2026-10-30T00:00:00Z",
+    "cpuCoreRequestAverage": 0.25,
+    "cpuCoreUsageAverage": 0.208344,
+    "ramByteRequestAverage": 536870912,
+    "ramByteUsageAverage": 429371922,
+    "cpuCost": 0.189666,
+    "ramCost": 0.050844,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 0.24051,
+    "totalEfficiency": 0.82627
+   },
+   "kube-system/metrics-server": {
+    "name": "kube-system/metrics-server",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "kube-system",
+     "controller": "metrics-server",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "platform-team",
+      "app": "metrics-server"
+     }
+    },
+    "window": {
+     "start": "2026-10-29T00:00:00Z",
+     "end": "2026-10-30T00:00:00Z"
+    },
+    "start": "2026-10-29T00:00:00Z",
+    "end": "2026-10-30T00:00:00Z",
+    "cpuCoreRequestAverage": 0.1,
+    "cpuCoreUsageAverage": 0.002918,
+    "ramByteRequestAverage": 214748365,
+    "ramByteUsageAverage": 29540971,
+    "cpuCost": 0.075866,
+    "ramCost": 0.020338,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 0.096204,
+    "totalEfficiency": 0.052089
+   },
+   "monitoring/prometheus-server": {
+    "name": "monitoring/prometheus-server",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "monitoring",
+     "controller": "prometheus-server",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "platform-team",
+      "app": "prometheus-server"
+     }
+    },
+    "window": {
+     "start": "2026-10-29T00:00:00Z",
+     "end": "2026-10-30T00:00:00Z"
+    },
+    "start": "2026-10-29T00:00:00Z",
+    "end": "2026-10-30T00:00:00Z",
+    "cpuCoreRequestAverage": 0.2,
+    "cpuCoreUsageAverage": 0.138394,
+    "ramByteRequestAverage": 1073741824,
+    "ramByteUsageAverage": 842334993,
+    "cpuCost": 0.151733,
+    "ramCost": 0.101688,
+    "pvCost": 0.0008,
+    "networkCost": 0.0,
+    "totalCost": 0.254221,
+    "totalEfficiency": 0.729093
+   },
+   "opencost/opencost": {
+    "name": "opencost/opencost",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "opencost",
+     "controller": "opencost",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "platform-team",
+      "app": "opencost"
+     }
+    },
+    "window": {
+     "start": "2026-10-29T00:00:00Z",
+     "end": "2026-10-30T00:00:00Z"
+    },
+    "start": "2026-10-29T00:00:00Z",
+    "end": "2026-10-30T00:00:00Z",
+    "cpuCoreRequestAverage": 0.1,
+    "cpuCoreUsageAverage": 0.019718,
+    "ramByteRequestAverage": 268435456,
+    "ramByteUsageAverage": 152751716,
+    "cpuCost": 0.075866,
+    "ramCost": 0.025422,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 0.101288,
+    "totalEfficiency": 0.290512
+   },
+   "__idle__": {
+    "name": "__idle__",
+    "properties": {
+     "cluster": "cluster-one"
+    },
+    "window": {
+     "start": "2026-10-29T00:00:00Z",
+     "end": "2026-10-30T00:00:00Z"
+    },
+    "start": "2026-10-29T00:00:00Z",
+    "end": "2026-10-30T00:00:00Z",
+    "cpuCost": 0.303466,
+    "ramCost": 0.08135,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 0.384816,
+    "totalEfficiency": 0.0
+   }
+  },
+  {
+   "payments/api-gateway": {
+    "name": "payments/api-gateway",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "payments",
+     "controller": "api-gateway",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "payments-team",
+      "app": "api-gateway"
+     }
+    },
+    "window": {
+     "start": "2026-10-30T00:00:00Z",
+     "end": "2026-10-31T00:00:00Z"
+    },
+    "start": "2026-10-30T00:00:00Z",
+    "end": "2026-10-31T00:00:00Z",
+    "cpuCoreRequestAverage": 1.548828,
+    "cpuCoreUsageAverage": 1.166107,
+    "ramByteRequestAverage": 3326081911,
+    "ramByteUsageAverage": 2673378336,
+    "cpuCost": 1.17504,
+    "ramCost": 0.314994,
+    "pvCost": 0.0024,
+    "networkCost": 0.0,
+    "totalCost": 1.492434,
+    "totalEfficiency": 0.76365
+   },
+   "payments/payment-service": {
+    "name": "payments/payment-service",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "payments",
+     "controller": "payment-service",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "payments-team",
+      "app": "payment-service"
+     }
+    },
+    "window": {
+     "start": "2026-10-30T00:00:00Z",
+     "end": "2026-10-31T00:00:00Z"
+    },
+    "start": "2026-10-30T00:00:00Z",
+    "end": "2026-10-31T00:00:00Z",
+    "cpuCoreRequestAverage": 1.126976,
+    "cpuCoreUsageAverage": 0.824445,
+    "ramByteRequestAverage": 2420162505,
+    "ramByteUsageAverage": 1746103901,
+    "cpuCost": 0.854996,
+    "ramCost": 0.2292,
+    "pvCost": 0.0016,
+    "networkCost": 0.0,
+    "totalCost": 1.085796,
+    "totalEfficiency": 0.729426
+   },
+   "catalog/overprovisioned-app": {
+    "name": "catalog/overprovisioned-app",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "catalog",
+     "controller": "overprovisioned-app",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "catalog-team",
+      "app": "overprovisioned-app"
+     }
+    },
+    "window": {
+     "start": "2026-10-30T00:00:00Z",
+     "end": "2026-10-31T00:00:00Z"
+    },
+    "start": "2026-10-30T00:00:00Z",
+    "end": "2026-10-31T00:00:00Z",
+    "cpuCoreRequestAverage": 2.0,
+    "cpuCoreUsageAverage": 0.004631,
+    "ramByteRequestAverage": 4294967296,
+    "ramByteUsageAverage": 123770098,
+    "cpuCost": 1.517328,
+    "ramCost": 0.406752,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 1.92408,
+    "totalEfficiency": 0.007918
+   },
+   "catalog/rightsized-app": {
+    "name": "catalog/rightsized-app",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "catalog",
+     "controller": "rightsized-app",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "catalog-team",
+      "app": "rightsized-app"
+     }
+    },
+    "window": {
+     "start": "2026-10-30T00:00:00Z",
+     "end": "2026-10-31T00:00:00Z"
+    },
+    "start": "2026-10-30T00:00:00Z",
+    "end": "2026-10-31T00:00:00Z",
+    "cpuCoreRequestAverage": 0.1,
+    "cpuCoreUsageAverage": 0.077707,
+    "ramByteRequestAverage": 268435456,
+    "ramByteUsageAverage": 202469207,
+    "cpuCost": 0.075866,
+    "ramCost": 0.025422,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 0.101288,
+    "totalEfficiency": 0.771343
+   },
+   "catalog/search-service": {
+    "name": "catalog/search-service",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "catalog",
+     "controller": "search-service",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "catalog-team",
+      "app": "search-service"
+     }
+    },
+    "window": {
+     "start": "2026-10-30T00:00:00Z",
+     "end": "2026-10-31T00:00:00Z"
+    },
+    "start": "2026-10-30T00:00:00Z",
+    "end": "2026-10-31T00:00:00Z",
+    "cpuCoreRequestAverage": 0.878674,
+    "cpuCoreUsageAverage": 0.505918,
+    "ramByteRequestAverage": 3773877872,
+    "ramByteUsageAverage": 3115191142,
+    "cpuCost": 0.666619,
+    "ramCost": 0.357403,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 1.024022,
+    "totalEfficiency": 0.66292
+   },
+   "analytics/idle-app": {
+    "name": "analytics/idle-app",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "analytics",
+     "controller": "idle-app",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "data-team",
+      "app": "idle-app"
+     }
+    },
+    "window": {
+     "start": "2026-10-30T00:00:00Z",
+     "end": "2026-10-31T00:00:00Z"
+    },
+    "start": "2026-10-30T00:00:00Z",
+    "end": "2026-10-31T00:00:00Z",
+    "cpuCoreRequestAverage": 0.75,
+    "cpuCoreUsageAverage": 0.003992,
+    "ramByteRequestAverage": 1073741824,
+    "ramByteUsageAverage": 22001585,
+    "cpuCost": 0.568998,
+    "ramCost": 0.101688,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 0.670686,
+    "totalEfficiency": 0.007623
+   },
+   "analytics/batch-reporter": {
+    "name": "analytics/batch-reporter",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "analytics",
+     "controller": "batch-reporter",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "data-team",
+      "app": "batch-reporter"
+     }
+    },
+    "window": {
+     "start": "2026-10-30T00:00:00Z",
+     "end": "2026-10-31T00:00:00Z"
+    },
+    "start": "2026-10-30T00:00:00Z",
+    "end": "2026-10-31T00:00:00Z",
+    "cpuCoreRequestAverage": 0.25,
+    "cpuCoreUsageAverage": 0.192997,
+    "ramByteRequestAverage": 536870912,
+    "ramByteUsageAverage": 413068590,
+    "cpuCost": 0.189666,
+    "ramCost": 0.050844,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 0.24051,
+    "totalEfficiency": 0.77144
+   },
+   "kube-system/metrics-server": {
+    "name": "kube-system/metrics-server",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "kube-system",
+     "controller": "metrics-server",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "platform-team",
+      "app": "metrics-server"
+     }
+    },
+    "window": {
+     "start": "2026-10-30T00:00:00Z",
+     "end": "2026-10-31T00:00:00Z"
+    },
+    "start": "2026-10-30T00:00:00Z",
+    "end": "2026-10-31T00:00:00Z",
+    "cpuCoreRequestAverage": 0.1,
+    "cpuCoreUsageAverage": 0.00302,
+    "ramByteRequestAverage": 214748365,
+    "ramByteUsageAverage": 32487798,
+    "cpuCost": 0.075866,
+    "ramCost": 0.020338,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 0.096204,
+    "totalEfficiency": 0.055797
+   },
+   "monitoring/prometheus-server": {
+    "name": "monitoring/prometheus-server",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "monitoring",
+     "controller": "prometheus-server",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "platform-team",
+      "app": "prometheus-server"
+     }
+    },
+    "window": {
+     "start": "2026-10-30T00:00:00Z",
+     "end": "2026-10-31T00:00:00Z"
+    },
+    "start": "2026-10-30T00:00:00Z",
+    "end": "2026-10-31T00:00:00Z",
+    "cpuCoreRequestAverage": 0.2,
+    "cpuCoreUsageAverage": 0.138974,
+    "ramByteRequestAverage": 1073741824,
+    "ramByteUsageAverage": 897381517,
+    "cpuCost": 0.151733,
+    "ramCost": 0.101688,
+    "pvCost": 0.0008,
+    "networkCost": 0.0,
+    "totalCost": 0.254221,
+    "totalEfficiency": 0.751402
+   },
+   "opencost/opencost": {
+    "name": "opencost/opencost",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "opencost",
+     "controller": "opencost",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "platform-team",
+      "app": "opencost"
+     }
+    },
+    "window": {
+     "start": "2026-10-30T00:00:00Z",
+     "end": "2026-10-31T00:00:00Z"
+    },
+    "start": "2026-10-30T00:00:00Z",
+    "end": "2026-10-31T00:00:00Z",
+    "cpuCoreRequestAverage": 0.1,
+    "cpuCoreUsageAverage": 0.021631,
+    "ramByteRequestAverage": 268435456,
+    "ramByteUsageAverage": 166107473,
+    "cpuCost": 0.075866,
+    "ramCost": 0.025422,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 0.101288,
+    "totalEfficiency": 0.317326
+   },
+   "__idle__": {
+    "name": "__idle__",
+    "properties": {
+     "cluster": "cluster-one"
+    },
+    "window": {
+     "start": "2026-10-30T00:00:00Z",
+     "end": "2026-10-31T00:00:00Z"
+    },
+    "start": "2026-10-30T00:00:00Z",
+    "end": "2026-10-31T00:00:00Z",
+    "cpuCost": 0.303466,
+    "ramCost": 0.08135,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 0.384816,
+    "totalEfficiency": 0.0
+   }
+  },
+  {
+   "payments/api-gateway": {
+    "name": "payments/api-gateway",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "payments",
+     "controller": "api-gateway",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "payments-team",
+      "app": "api-gateway"
+     }
+    },
+    "window": {
+     "start": "2026-10-31T00:00:00Z",
+     "end": "2026-11-01T00:00:00Z"
+    },
+    "start": "2026-10-31T00:00:00Z",
+    "end": "2026-11-01T00:00:00Z",
+    "cpuCoreRequestAverage": 1.075548,
+    "cpuCoreUsageAverage": 0.791199,
+    "ramByteRequestAverage": 2309721258,
+    "ramByteUsageAverage": 1854393195,
+    "cpuCost": 0.815979,
+    "ramCost": 0.218741,
+    "pvCost": 0.0024,
+    "networkCost": 0.0,
+    "totalCost": 1.03712,
+    "totalEfficiency": 0.749839
+   },
+   "payments/payment-service": {
+    "name": "payments/payment-service",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "payments",
+     "controller": "payment-service",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "payments-team",
+      "app": "payment-service"
+     }
+    },
+    "window": {
+     "start": "2026-10-31T00:00:00Z",
+     "end": "2026-11-01T00:00:00Z"
+    },
+    "start": "2026-10-31T00:00:00Z",
+    "end": "2026-11-01T00:00:00Z",
+    "cpuCoreRequestAverage": 1.270144,
+    "cpuCoreUsageAverage": 0.875586,
+    "ramByteRequestAverage": 2727614003,
+    "ramByteUsageAverage": 2045991575,
+    "cpuCost": 0.963613,
+    "ramCost": 0.258317,
+    "pvCost": 0.0016,
+    "networkCost": 0.0,
+    "totalCost": 1.22353,
+    "totalEfficiency": 0.702201
+   },
+   "catalog/overprovisioned-app": {
+    "name": "catalog/overprovisioned-app",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "catalog",
+     "controller": "overprovisioned-app",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "catalog-team",
+      "app": "overprovisioned-app"
+     }
+    },
+    "window": {
+     "start": "2026-10-31T00:00:00Z",
+     "end": "2026-11-01T00:00:00Z"
+    },
+    "start": "2026-10-31T00:00:00Z",
+    "end": "2026-11-01T00:00:00Z",
+    "cpuCoreRequestAverage": 2.0,
+    "cpuCoreUsageAverage": 0.004621,
+    "ramByteRequestAverage": 4294967296,
+    "ramByteUsageAverage": 131664243,
+    "cpuCost": 1.517328,
+    "ramCost": 0.406752,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 1.92408,
+    "totalEfficiency": 0.008302
+   },
+   "catalog/rightsized-app": {
+    "name": "catalog/rightsized-app",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "catalog",
+     "controller": "rightsized-app",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "catalog-team",
+      "app": "rightsized-app"
+     }
+    },
+    "window": {
+     "start": "2026-10-31T00:00:00Z",
+     "end": "2026-11-01T00:00:00Z"
+    },
+    "start": "2026-10-31T00:00:00Z",
+    "end": "2026-11-01T00:00:00Z",
+    "cpuCoreRequestAverage": 0.1,
+    "cpuCoreUsageAverage": 0.063275,
+    "ramByteRequestAverage": 268435456,
+    "ramByteUsageAverage": 173332566,
+    "cpuCost": 0.075866,
+    "ramCost": 0.025422,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 0.101288,
+    "totalEfficiency": 0.636004
+   },
+   "catalog/search-service": {
+    "name": "catalog/search-service",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "catalog",
+     "controller": "search-service",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "catalog-team",
+      "app": "search-service"
+     }
+    },
+    "window": {
+     "start": "2026-10-31T00:00:00Z",
+     "end": "2026-11-01T00:00:00Z"
+    },
+    "start": "2026-10-31T00:00:00Z",
+    "end": "2026-11-01T00:00:00Z",
+    "cpuCoreRequestAverage": 0.742517,
+    "cpuCoreUsageAverage": 0.477554,
+    "ramByteRequestAverage": 3189085379,
+    "ramByteUsageAverage": 2602338130,
+    "cpuCost": 0.563321,
+    "ramCost": 0.30202,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 0.865341,
+    "totalEfficiency": 0.703486
+   },
+   "analytics/idle-app": {
+    "name": "analytics/idle-app",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "analytics",
+     "controller": "idle-app",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "data-team",
+      "app": "idle-app"
+     }
+    },
+    "window": {
+     "start": "2026-10-31T00:00:00Z",
+     "end": "2026-11-01T00:00:00Z"
+    },
+    "start": "2026-10-31T00:00:00Z",
+    "end": "2026-11-01T00:00:00Z",
+    "cpuCoreRequestAverage": 0.75,
+    "cpuCoreUsageAverage": 0.003838,
+    "ramByteRequestAverage": 1073741824,
+    "ramByteUsageAverage": 20729818,
+    "cpuCost": 0.568998,
+    "ramCost": 0.101688,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 0.670686,
+    "totalEfficiency": 0.007268
+   },
+   "analytics/batch-reporter": {
+    "name": "analytics/batch-reporter",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "analytics",
+     "controller": "batch-reporter",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "data-team",
+      "app": "batch-reporter"
+     }
+    },
+    "window": {
+     "start": "2026-10-31T00:00:00Z",
+     "end": "2026-11-01T00:00:00Z"
+    },
+    "start": "2026-10-31T00:00:00Z",
+    "end": "2026-11-01T00:00:00Z",
+    "cpuCoreRequestAverage": 0.25,
+    "cpuCoreUsageAverage": 0.077776,
+    "ramByteRequestAverage": 536870912,
+    "ramByteUsageAverage": 167660656,
+    "cpuCost": 0.189666,
+    "ramCost": 0.050844,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 0.24051,
+    "totalEfficiency": 0.311356
+   },
+   "kube-system/metrics-server": {
+    "name": "kube-system/metrics-server",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "kube-system",
+     "controller": "metrics-server",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "platform-team",
+      "app": "metrics-server"
+     }
+    },
+    "window": {
+     "start": "2026-10-31T00:00:00Z",
+     "end": "2026-11-01T00:00:00Z"
+    },
+    "start": "2026-10-31T00:00:00Z",
+    "end": "2026-11-01T00:00:00Z",
+    "cpuCoreRequestAverage": 0.1,
+    "cpuCoreUsageAverage": 0.002786,
+    "ramByteRequestAverage": 214748365,
+    "ramByteUsageAverage": 29397780,
+    "cpuCost": 0.075866,
+    "ramCost": 0.020338,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 0.096204,
+    "totalEfficiency": 0.050913
+   },
+   "monitoring/prometheus-server": {
+    "name": "monitoring/prometheus-server",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "monitoring",
+     "controller": "prometheus-server",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "platform-team",
+      "app": "prometheus-server"
+     }
+    },
+    "window": {
+     "start": "2026-10-31T00:00:00Z",
+     "end": "2026-11-01T00:00:00Z"
+    },
+    "start": "2026-10-31T00:00:00Z",
+    "end": "2026-11-01T00:00:00Z",
+    "cpuCoreRequestAverage": 0.2,
+    "cpuCoreUsageAverage": 0.148234,
+    "ramByteRequestAverage": 1073741824,
+    "ramByteUsageAverage": 980741159,
+    "cpuCost": 0.151733,
+    "ramCost": 0.101688,
+    "pvCost": 0.0008,
+    "networkCost": 0.0,
+    "totalCost": 0.254221,
+    "totalEfficiency": 0.810274
+   },
+   "opencost/opencost": {
+    "name": "opencost/opencost",
+    "properties": {
+     "cluster": "cluster-one",
+     "namespace": "opencost",
+     "controller": "opencost",
+     "controllerKind": "deployment",
+     "labels": {
+      "team": "platform-team",
+      "app": "opencost"
+     }
+    },
+    "window": {
+     "start": "2026-10-31T00:00:00Z",
+     "end": "2026-11-01T00:00:00Z"
+    },
+    "start": "2026-10-31T00:00:00Z",
+    "end": "2026-11-01T00:00:00Z",
+    "cpuCoreRequestAverage": 0.1,
+    "cpuCoreUsageAverage": 0.021374,
+    "ramByteRequestAverage": 268435456,
+    "ramByteUsageAverage": 165293830,
+    "cpuCost": 0.075866,
+    "ramCost": 0.025422,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 0.101288,
+    "totalEfficiency": 0.314646
+   },
+   "__idle__": {
+    "name": "__idle__",
+    "properties": {
+     "cluster": "cluster-one"
+    },
+    "window": {
+     "start": "2026-10-31T00:00:00Z",
+     "end": "2026-11-01T00:00:00Z"
+    },
+    "start": "2026-10-31T00:00:00Z",
+    "end": "2026-11-01T00:00:00Z",
+    "cpuCost": 0.303466,
+    "ramCost": 0.08135,
+    "pvCost": 0.0,
+    "networkCost": 0.0,
+    "totalCost": 0.384816,
+    "totalEfficiency": 0.0
+   }
+  }
+ ]
+}

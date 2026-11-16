@@ -1,0 +1,64 @@
+# Test workloads with KNOWN waste patterns (problem reproduction, CLOUD-04 O1).
+#   overprovisioned-app : asks for 2 x 500m CPU, uses ~0   -> should be flagged IDLE / RIGHT-SIZE
+#   rightsized-app      : asks 100m, uses a little         -> should be OK / small right-size
+#   idle-app            : asks 750m, does nothing          -> should be flagged IDLE
+# Apply:  kubectl apply -f k8s/workloads.yaml
+---
+apiVersion: v1
+kind: Namespace
+metadata: { name: catalog, labels: { team: catalog-team } }
+---
+apiVersion: v1
+kind: Namespace
+metadata: { name: analytics, labels: { team: data-team } }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: overprovisioned-app, namespace: catalog }
+spec:
+  replicas: 2
+  selector: { matchLabels: { app: overprovisioned-app } }
+  template:
+    metadata: { labels: { app: overprovisioned-app, team: catalog-team } }
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.27-alpine
+          resources:
+            requests: { cpu: 500m, memory: 256Mi }
+            limits: { cpu: 500m, memory: 256Mi }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: rightsized-app, namespace: catalog }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: rightsized-app } }
+  template:
+    metadata: { labels: { app: rightsized-app, team: catalog-team } }
+    spec:
+      containers:
+        - name: worker
+          image: busybox:1.36
+          # light, steady CPU use so efficiency is realistic
+          command: ["sh", "-c", "while true; do i=0; while [ $i -lt 30000 ]; do i=$((i+1)); done; sleep 1; done"]
+          resources:
+            requests: { cpu: 50m, memory: 32Mi }
+            limits: { cpu: 100m, memory: 64Mi }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: idle-app, namespace: analytics }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: idle-app } }
+  template:
+    metadata: { labels: { app: idle-app, team: data-team } }
+    spec:
+      containers:
+        - name: sleeper
+          image: busybox:1.36
+          command: ["sh", "-c", "sleep infinity"]
+          resources:
+            requests: { cpu: 750m, memory: 512Mi }
+            limits: { cpu: 750m, memory: 512Mi }

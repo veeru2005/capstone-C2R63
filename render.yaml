@@ -1,0 +1,12 @@
+# Render.com blueprint: New + -> Blueprint -> pick this repo. One free web service
+# runs both the dashboard and the API (built from the root Dockerfile).
+services:
+  - type: web
+    name: finops-cloud04
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: demo

@@ -1,0 +1,122 @@
+{
+  "KPI-4 recovery rate under fault injection (%)": 100.0,
+  "KPI-5 service error rate (%)": 0.0,
+  "KPI-6 worst endpoint p95 latency (ms)": 4.58,
+  "faults": [
+    {
+      "id": "F1",
+      "fault": "OpenCost unreachable (connection refused)",
+      "recovered": true,
+      "note": "failed run recorded, data intact",
+      "recovery_ms": 2054.3
+    },
+    {
+      "id": "F2",
+      "fault": "OpenCost timeout (non-routable host)",
+      "recovered": true,
+      "note": "timeout handled, data intact",
+      "recovery_ms": 510.2
+    },
+    {
+      "id": "F3",
+      "fault": "Malformed payload (garbage JSON structure)",
+      "recovered": true,
+      "note": "all rows rejected with reasons",
+      "recovery_ms": 3.0
+    },
+    {
+      "id": "F4",
+      "fault": "Duplicate replay of a full payload",
+      "recovered": true,
+      "note": "idempotent upsert, no double-count",
+      "recovery_ms": 15.2
+    },
+    {
+      "id": "F5",
+      "fault": "Corrupt record (negative cost) inside valid payload",
+      "recovered": true,
+      "note": "bad row quarantined, rest accepted",
+      "recovery_ms": 14.2
+    },
+    {
+      "id": "F6",
+      "fault": "6-day gap in cost history (collector outage)",
+      "recovered": true,
+      "note": "gaps zero-filled, forecast + recommendations still produced",
+      "recovery_ms": 14.3
+    },
+    {
+      "id": "F7",
+      "fault": "Recovery: replay after gap",
+      "recovered": true,
+      "note": "state reconciled to the original totals",
+      "recovery_ms": 22.0
+    }
+  ],
+  "latency": [
+    {
+      "endpoint": "/health",
+      "trials": 50,
+      "p50_ms": 1.18,
+      "p95_ms": 1.28,
+      "p99_ms": 1.39,
+      "error_rate_pct": 0.0
+    },
+    {
+      "endpoint": "/costs",
+      "trials": 50,
+      "p50_ms": 2.95,
+      "p95_ms": 3.3,
+      "p99_ms": 21.83,
+      "error_rate_pct": 0.0
+    },
+    {
+      "endpoint": "/costs/summary",
+      "trials": 50,
+      "p50_ms": 1.63,
+      "p95_ms": 1.72,
+      "p99_ms": 1.8,
+      "error_rate_pct": 0.0
+    },
+    {
+      "endpoint": "/attribution?by=team",
+      "trials": 50,
+      "p50_ms": 1.45,
+      "p95_ms": 1.52,
+      "p99_ms": 1.74,
+      "error_rate_pct": 0.0
+    },
+    {
+      "endpoint": "/trends?by=team",
+      "trials": 50,
+      "p50_ms": 4.0,
+      "p95_ms": 4.58,
+      "p99_ms": 7.27,
+      "error_rate_pct": 0.0
+    },
+    {
+      "endpoint": "/anomalies",
+      "trials": 50,
+      "p50_ms": 1.24,
+      "p95_ms": 1.33,
+      "p99_ms": 1.54,
+      "error_rate_pct": 0.0
+    },
+    {
+      "endpoint": "/forecast",
+      "trials": 50,
+      "p50_ms": 1.48,
+      "p95_ms": 1.6,
+      "p99_ms": 1.7,
+      "error_rate_pct": 0.0
+    },
+    {
+      "endpoint": "/recommendations",
+      "trials": 50,
+      "p50_ms": 1.25,
+      "p95_ms": 1.31,
+      "p99_ms": 1.49,
+      "error_rate_pct": 0.0
+    }
+  ]
+}

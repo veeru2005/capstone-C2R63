@@ -1,0 +1,12 @@
+{
+  "payments": "payments-team",
+  "catalog": "catalog-team",
+  "analytics": "data-team",
+  "default": "unassigned",
+  "kube-system": "platform-team",
+  "opencost": "platform-team",
+  "monitoring": "platform-team",
+  "prometheus-system": "platform-team",
+  "local-path-storage": "platform-team",
+  "demo": "demo-team"
+}

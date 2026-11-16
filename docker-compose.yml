@@ -1,0 +1,25 @@
+# docker compose up --build   ->  dashboard http://localhost:5173 , API http://localhost:8000/docs
+# Live data: run `kubectl port-forward -n opencost service/opencost 9003:9003` on the host
+# and set AUTO_SYNC_MINUTES=2 below — the container reaches it via host.docker.internal.
+services:
+  backend:
+    build: ./backend
+    ports: ["8000:8000"]
+    environment:
+      OPENCOST_URL: http://host.docker.internal:9003
+      AUTO_SYNC_MINUTES: "0"
+      CORS_ORIGINS: http://localhost:5173
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    volumes: [finops-data:/data]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 15s
+      retries: 5
+  frontend:
+    build:
+      context: ./frontend
+      args: { VITE_API_BASE: "http://localhost:8000" }
+    ports: ["5173:80"]
+    depends_on: [backend]
+volumes:
+  finops-data:

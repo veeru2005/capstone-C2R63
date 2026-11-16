@@ -1,0 +1,10 @@
+date,namespace,workload,multiplier,size
+2026-08-28,catalog,overprovisioned-app,4.2,large
+2026-09-12,analytics,idle-app,3.8,large
+2026-09-22,catalog,overprovisioned-app,4.5,large
+2026-09-30,payments,payment-service,2.0,medium
+2026-10-05,catalog,search-service,1.8,medium
+2026-10-13,payments,api-gateway,2.2,medium
+2026-10-21,analytics,batch-reporter,1.6,small
+2026-10-26,catalog,rightsized-app,1.7,small
+2026-10-29,payments,api-gateway,1.5,small

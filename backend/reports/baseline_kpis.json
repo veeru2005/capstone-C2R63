@@ -1,0 +1,174 @@
+{
+  "measured_at": "2026-11-16T07:25:17+00:00",
+  "kpis": {
+    "KPI-2 cost-forecast accuracy": {
+      "unit": "%",
+      "O2-reference": 90.608,
+      "O2-method": "R1-moving-average",
+      "O3-candidate": 94.609,
+      "O3-method": "O3-seasonal-trend",
+      "delta_pp": 4.001,
+      "target": "O3 >= O2 + 3 pp",
+      "all_models": {
+        "R1-moving-average": {
+          "mape_pct": 9.392,
+          "accuracy_pct": 90.608
+        },
+        "R2-linear-trend": {
+          "mape_pct": 10.128,
+          "accuracy_pct": 89.872
+        },
+        "O3-seasonal-trend": {
+          "mape_pct": 5.391,
+          "accuracy_pct": 94.609
+        }
+      }
+    },
+    "KPI-3 anomaly-detection precision": {
+      "unit": "%",
+      "O2-reference": 38.1,
+      "O2-method": "cost > 1.5 x 7-day avg",
+      "O3-candidate": 72.73,
+      "O3-method": "z-score, window 14d, threshold 2.5",
+      "delta_pp": 34.63,
+      "reference_detail": {
+        "tp": 8,
+        "fp": 13,
+        "fn": 1,
+        "precision": 0.381,
+        "recall": 0.8889,
+        "f1": 0.5333,
+        "false_positives": [
+          [
+            "2026-08-10",
+            "analytics",
+            "batch-reporter"
+          ],
+          [
+            "2026-08-17",
+            "analytics",
+            "batch-reporter"
+          ],
+          [
+            "2026-08-24",
+            "analytics",
+            "batch-reporter"
+          ],
+          [
+            "2026-08-31",
+            "analytics",
+            "batch-reporter"
+          ],
+          [
+            "2026-09-07",
+            "analytics",
+            "batch-reporter"
+          ],
+          [
+            "2026-09-14",
+            "analytics",
+            "batch-reporter"
+          ],
+          [
+            "2026-09-21",
+            "analytics",
+            "batch-reporter"
+          ],
+          [
+            "2026-09-28",
+            "analytics",
+            "batch-reporter"
+          ],
+          [
+            "2026-10-05",
+            "analytics",
+            "batch-reporter"
+          ],
+          [
+            "2026-10-12",
+            "analytics",
+            "batch-reporter"
+          ],
+          [
+            "2026-10-19",
+            "analytics",
+            "batch-reporter"
+          ],
+          [
+            "2026-10-26",
+            "analytics",
+            "batch-reporter"
+          ],
+          [
+            "2026-10-29",
+            "catalog",
+            "search-service"
+          ]
+        ],
+        "missed": [
+          [
+            "2026-10-21",
+            "analytics",
+            "batch-reporter"
+          ]
+        ]
+      },
+      "candidate_detail": {
+        "tp": 8,
+        "fp": 3,
+        "fn": 1,
+        "precision": 0.7273,
+        "recall": 0.8889,
+        "f1": 0.8,
+        "false_positives": [
+          [
+            "2026-08-19",
+            "catalog",
+            "search-service"
+          ],
+          [
+            "2026-08-28",
+            "catalog",
+            "search-service"
+          ],
+          [
+            "2026-09-08",
+            "payments",
+            "payment-service"
+          ]
+        ],
+        "missed": [
+          [
+            "2026-10-21",
+            "analytics",
+            "batch-reporter"
+          ]
+        ]
+      },
+      "target": "O3 >= O2 + 3 pp"
+    },
+    "KPI-1 estimated savings (monthly)": {
+      "unit": "USD/month",
+      "O2-reference": 122.2586,
+      "O2-method": "naive unused-request waste (upper bound, not actionable)",
+      "O3-candidate": 81.3955,
+      "O3-method": "O4 safe recommendations (p95 x 1.3 headroom, no system deletes)",
+      "by_category": {
+        "IDLE": 73.9508,
+        "RIGHT-SIZE": 4.2238,
+        "COMMITMENT": 3.2209
+      },
+      "note": "Reference over-states savings because it ignores headroom and system pods; compare on realised savings in Sem VIII (AC-1)."
+    }
+  },
+  "attribution_reconciliation": {
+    "raw_total": 721.581016,
+    "by_grouping": {
+      "team": 721.581016,
+      "namespace": 721.581016,
+      "workload": 721.581016
+    },
+    "max_abs_diff": 0.0,
+    "reconciled": true
+  }
+}
