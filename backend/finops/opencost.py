@@ -180,6 +180,8 @@ def fetch_live(window: str = "10m", base_url: str | None = None, timeout: float 
             status = "IDLE"
         elif (eff or 0) < config.RIGHTSIZE_EFFICIENCY_PCT:
             status = "OVER-PROVISIONED"
+        elif (eff or 0) > 110:
+            status = "BURSTING"          # uses more than it reserved: cost is above plan, risk of throttling
         else:
             status = "OK"
         out.append({**r, "efficiency_pct": round(eff, 2) if eff is not None else None, "status": status})

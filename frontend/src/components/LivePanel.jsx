@@ -9,6 +9,7 @@ const BADGE = {
   "OVER-PROVISIONED": "bg-amber-500/20 text-amber-400 border-amber-500/30",
   OK: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
   SYSTEM: "bg-slate-500/20 text-slate-300 border-slate-500/30",
+  BURSTING: "bg-purple-500/20 text-purple-300 border-purple-500/40",
 };
 const ALERT = {
   SPIKE: "bg-rose-600 text-white border-rose-500",
@@ -111,7 +112,7 @@ export default function LivePanel({ currency }) {
                     <td className="py-2.5 px-4 text-right font-mono">{fmtPct(w.efficiency_pct, 2)}</td>
                     <td className="py-2.5 px-4 text-right font-mono">{formatCurrency(w.total_cost, currency)}</td>
                     <td className="py-2.5 px-4">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${BADGE[w.status]}`}>{w.status}</span>
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold border whitespace-nowrap ${BADGE[w.status]}`}>{w.status}</span>
                     </td>
                     <td className="py-2.5 px-4">
                       {alerts[`${w.namespace}/${w.workload}`] && (

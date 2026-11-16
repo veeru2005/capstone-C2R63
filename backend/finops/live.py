@@ -136,6 +136,10 @@ def analyse(tl: dict) -> dict:
                     for k in range(1, FORECAST_POINTS + 1)]
 
         recent_spike = any(i >= len(rates) - 3 for i in spike_idx)
+        if recent_spike:
+            # a fresh jump: a straight line through pre-spike points would wrongly predict a drop,
+            # so assume the new level continues until someone fixes it
+            forecast = [{**f, "rate": latest} for f in forecast]
         status = None
         if e["namespace"] in config.SYSTEM_NAMESPACES or latest < MIN_ALERT_RATE:
             pass  # never alert on Kubernetes' own pods or on noise-level costs
