@@ -1,150 +1,100 @@
-import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  ResponsiveContainer,
-} from "recharts";
-import { TrendingUp, Sparkles } from "lucide-react";
+import { useMemo, useState } from "react";
+import { ComposedChart, Line, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { TrendingUp } from "lucide-react";
+import { formatCurrency } from "../utils/currency";
 
-const COLORS = [
-  "#06B6D4", "#8B5CF6", "#10B981", "#F59E0B", "#EC4899", "#3B82F6",
-];
+const TOTAL = "__all__";
 
-function ForecastTooltip({ active, payload, label, isDark }) {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-[#1f2027] border border-finops-border rounded-lg p-3.5 shadow-2xl text-xs font-sans">
-        <div className="border-b border-finops-border/80 pb-2 mb-2">
-          <span className="font-semibold text-slate-300">{label}</span>
-        </div>
-        <div className="space-y-1.5">
-          {payload.map((entry, idx) => (
-            <div key={`item-${idx}`} className="flex items-center justify-between gap-6">
-              <span className="flex items-center gap-2 text-slate-300">
-                <span
-                  className="w-2.5 h-2.5 rounded-sm inline-block"
-                  style={{ backgroundColor: entry.color }}
-                />
-                <span className="truncate max-w-[140px]">{entry.name}:</span>
-              </span>
-              <span className="font-semibold text-white font-mono">
-                ${Number(entry.value).toFixed(2)}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-  return null;
-}
-
-export default function ForecastChart({ costData, forecastData, isDark = true }) {
-  if ((!costData || costData.length === 0) && (!forecastData || forecastData.length === 0)) {
-    return (
-      <div className="bg-finops-card border border-finops-border rounded-lg p-10 text-center">
-        No forecast data available.
-      </div>
-    );
-  }
-
-  const appNames = [
-    ...new Set([
-      ...(costData || []).map((r) => r.app_name),
-      ...(forecastData || []).map((r) => r.app_name),
-    ]),
-  ];
-
-  const byDate = {};
-
-  (costData || []).forEach((row) => {
-    if (!byDate[row.date]) byDate[row.date] = { date: row.date };
-    byDate[row.date][`${row.app_name}_hist`] = row.total_cost;
-  });
-
-  (forecastData || []).forEach((row) => {
-    if (!byDate[row.date]) byDate[row.date] = { date: row.date };
-    byDate[row.date][`${row.app_name}_fc`] = row.forecast_value;
-  });
-
-  const chartData = Object.values(byDate).sort(
-    (a, b) => new Date(a.date) - new Date(b.date)
+// One workload (or the cluster total) at a time: last 30 days actual + next 14 days forecast.
+export default function ForecastChart({ costData = [], forecastData = [], currency = "USD" }) {
+  const apps = useMemo(
+    () => [...new Set(forecastData.map((r) => `${r.namespace}/${r.app_name}`))].sort(),
+    [forecastData]
   );
+  const [pick, setPick] = useState(TOTAL);
 
-  const gridColor = isDark ? "#262730" : "#F1F5F9";
-  const axisColor = isDark ? "#71717A" : "#94A3B8";
+  const rows = useMemo(() => {
+    const match = (r) => pick === TOTAL || `${r.namespace}/${r.app_name}` === pick;
+    const byDate = {};
+    costData.filter(match).forEach((r) => {
+      byDate[r.date] = byDate[r.date] || { date: r.date };
+      byDate[r.date].actual = (byDate[r.date].actual || 0) + (Number(r.total_cost) || 0);
+    });
+    forecastData.filter(match).forEach((r) => {
+      byDate[r.date] = byDate[r.date] || { date: r.date };
+      const d = byDate[r.date];
+      d.forecast = (d.forecast || 0) + r.forecast_value;
+      d.lo = (d.lo || 0) + (r.lower ?? r.forecast_value);
+      d.hi = (d.hi || 0) + (r.upper ?? r.forecast_value);
+    });
+    const out = Object.values(byDate).sort((a, b) => (a.date < b.date ? -1 : 1));
+    out.forEach((d) => {
+      if (d.lo !== undefined) d.band = [d.lo, d.hi];
+    });
+    // join the two lines: last actual day also starts the forecast line
+    const lastActual = [...out].reverse().find((d) => d.actual !== undefined);
+    if (lastActual && lastActual.forecast === undefined) lastActual.forecast = lastActual.actual;
+    return out;
+  }, [costData, forecastData, pick]);
+
+  if (!forecastData.length) {
+    return <div className="bg-[#1a1a1e] border border-[#28282e] rounded-md p-10 text-center text-slate-400">No forecast yet — run the pipeline.</div>;
+  }
+
+  const next14 = rows.filter((r) => r.actual === undefined).reduce((s, r) => s + (r.forecast || 0), 0);
+  const last14 = rows.filter((r) => r.actual !== undefined).slice(-14).reduce((s, r) => s + r.actual, 0);
+  const change = last14 ? ((next14 - last14) / last14) * 100 : null;
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
-          <div className="flex items-center gap-2">
-            <h2 className="text-sm font-semibold text-slate-200">
-              Cost Forecast (seasonal + trend model, 14 days)
-            </h2>
-            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">
-              3-Day Horizon
-            </span>
-          </div>
-          <p className="text-xs text-finops-muted">
-            <span className="font-semibold">Solid Line</span> = Historical Telemetry &nbsp;|&nbsp;
-            <span className="font-semibold">Dashed Line</span> = Forecasted Run-Rate
-          </p>
+          <h2 className="text-sm font-bold text-white flex items-center gap-2">
+            <TrendingUp className="w-4 h-4 text-purple-400" /> Cost Forecast — next 14 days
+          </h2>
+          <p className="text-xs text-slate-400">Solid = actual (last 30 days) · dashed = forecast · shaded = likely range</p>
         </div>
+        <select
+          value={pick}
+          onChange={(e) => setPick(e.target.value)}
+          className="bg-[#1a1a1e] border border-[#28282e] rounded px-3 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-blue-500"
+        >
+          <option value={TOTAL}>Whole cluster (all workloads)</option>
+          {apps.map((a) => (
+            <option key={a} value={a}>{a}</option>
+          ))}
+        </select>
       </div>
 
-      <div className="bg-finops-card border border-finops-border rounded-lg p-5 shadow-sm">
-        <div className="h-[320px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData} margin={{ top: 15, right: 10, left: -10, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
-              <XAxis
-                dataKey="date"
-                tick={{ fontSize: 11, fill: axisColor }}
-                stroke={gridColor}
-              />
-              <YAxis
-                tick={{ fontSize: 11, fill: axisColor }}
-                tickFormatter={(v) => `$${v}`}
-                stroke={gridColor}
-              />
-              <Tooltip content={<ForecastTooltip isDark={isDark} />} />
-              <Legend
-                wrapperStyle={{ paddingTop: "14px", fontSize: "11px" }}
-                formatter={(value) => (
-                  <span className="text-slate-300 font-medium px-1">
-                    {value}
-                  </span>
-                )}
-              />
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {[
+          ["Last 14 days (actual)", formatCurrency(last14, currency)],
+          ["Next 14 days (forecast)", formatCurrency(next14, currency)],
+          ["Change", change === null ? "—" : `${change >= 0 ? "+" : ""}${change.toFixed(1)}%`],
+        ].map(([l, v]) => (
+          <div key={l} className="bg-[#1a1a1e] border border-[#28282e] rounded-md p-3">
+            <div className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">{l}</div>
+            <div className="text-lg font-bold text-white mt-1">{v}</div>
+          </div>
+        ))}
+      </div>
 
-              {appNames.map((name, idx) => {
-                const color = COLORS[idx % COLORS.length];
-                return [
-                  <Line
-                    key={`${name}_hist`}
-                    type="monotone"
-                    dataKey={`${name}_hist`}
-                    name={`${name} (actual)`}
-                    stroke={color}
-                    strokeWidth={2}
-                    dot={{ r: 2 }}
-                    connectNulls
-                  />,
-                  <Line
-                    key={`${name}_fc`}
-                    type="monotone"
-                    dataKey={`${name}_fc`}
-                    name={`${name} (forecast)`}
-                    stroke={color}
-                    strokeWidth={2}
-                    strokeDasharray="5 4"
-                    dot={false}
-                    connectNulls
-                  />,
-                ];
-              })}
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
+      <div className="bg-[#1a1a1e] border border-[#28282e] rounded-md p-4 h-80">
+        <ResponsiveContainer width="100%" height="100%">
+          <ComposedChart data={rows}>
+            <CartesianGrid stroke="#28282e" vertical={false} />
+            <XAxis dataKey="date" tick={{ fill: "#71717A", fontSize: 10 }} tickFormatter={(d) => d.slice(5)} minTickGap={20} />
+            <YAxis tick={{ fill: "#71717A", fontSize: 10 }} tickFormatter={(v) => formatCurrency(v, currency)} width={70} />
+            <Tooltip
+              formatter={(v, n) => [Array.isArray(v) ? `${formatCurrency(v[0], currency)} – ${formatCurrency(v[1], currency)}` : formatCurrency(v, currency), n]}
+              contentStyle={{ background: "#1f2027", border: "1px solid #28282e", fontSize: 12 }}
+            />
+            <Legend wrapperStyle={{ fontSize: 11 }} />
+            <Area isAnimationActive={false} dataKey="band" name="Likely range" stroke="none" fill="#8B5CF6" fillOpacity={0.15} />
+            <Line isAnimationActive={false} type="monotone" dataKey="actual" name="Actual" stroke="#3B82F6" strokeWidth={2} dot={false} />
+            <Line isAnimationActive={false} type="monotone" dataKey="forecast" name="Forecast" stroke="#A78BFA" strokeWidth={2} strokeDasharray="6 4" dot={false} />
+          </ComposedChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );

@@ -5,7 +5,6 @@ import HealthBanner from "./HealthBanner";
 import CostSummaryCards from "./CostSummaryCards";
 import AttributionPanel from "./AttributionPanel";
 import TrendsPanel from "./TrendsPanel";
-import CostAllocationChart from "./CostAllocationChart";
 import WorkloadTable from "./WorkloadTable";
 import AnomalyTable from "./AnomalyTable";
 import ForecastChart from "./ForecastChart";
@@ -24,7 +23,7 @@ const TITLES = {
   forecast: ["Forecast (O3)", "Next 14 days of cost per workload"],
   recommendations: ["Savings (O4)", "Idle, right-size and commitment recommendations with ₹/$ impact"],
   evaluation: ["Evaluation (KPIs)", "Reference vs our method on identical data"],
-  settings: ["Settings", ""],
+  settings: ["Settings", "Display preferences, data connection and detection rules"],
 };
 
 export default function Dashboard() {
@@ -44,6 +43,22 @@ export default function Dashboard() {
       return "INR";
     }
   });
+
+  const [autoRefresh, setAutoRefreshState] = useState(() => {
+    try {
+      return localStorage.getItem("finops_autorefresh") !== "off";
+    } catch {
+      return true;
+    }
+  });
+  const setAutoRefresh = (on) => {
+    setAutoRefreshState(on);
+    try {
+      localStorage.setItem("finops_autorefresh", on ? "on" : "off");
+    } catch {
+      /* private mode */
+    }
+  };
 
   const [health, setHealth] = useState(null);
   const [costs, setCosts] = useState([]);
@@ -92,9 +107,12 @@ export default function Dashboard() {
   // Initial load + auto-refresh every 60 s (picks up new data from live auto-sync)
   useEffect(() => {
     fetchAll();
+  }, [fetchAll]);
+  useEffect(() => {
+    if (!autoRefresh) return undefined;
     const t = setInterval(fetchAll, 60000);
     return () => clearInterval(t);
-  }, [fetchAll]);
+  }, [fetchAll, autoRefresh]);
 
   // The last 30 days are plenty for the per-workload charts
   const recentCosts = (() => {
@@ -157,7 +175,7 @@ export default function Dashboard() {
               <AttributionPanel key={`a${refreshKey}`} currency={currency} />
               <TrendsPanel key={`t${refreshKey}`} currency={currency} compact />
               <RecommendationsTable data={recommendations} currency={currency} />
-              <AnomalyTable data={anomalies.slice(0, 5)} />
+              <AnomalyTable data={anomalies.slice(0, 5)} currency={currency} />
             </>
           )}
 
@@ -166,7 +184,6 @@ export default function Dashboard() {
           {activeTab === "allocation" && (
             <div className="space-y-6">
               <AttributionPanel key={`a${refreshKey}`} currency={currency} />
-              <CostAllocationChart data={recentCosts} isDark currency={currency} />
               <WorkloadTable costs={recentCosts} summary={summary} currency={currency} />
             </div>
           )}
@@ -175,18 +192,17 @@ export default function Dashboard() {
 
           {activeTab === "anomalies" && (
             <div className="space-y-6">
-              <AnomalyTable data={anomalies} />
-              <CostAllocationChart data={recentCosts} isDark currency={currency} />
+              <AnomalyTable data={anomalies} currency={currency} />
             </div>
           )}
 
-          {activeTab === "forecast" && <ForecastChart costData={recentCosts} forecastData={forecast} isDark />}
+          {activeTab === "forecast" && <ForecastChart costData={recentCosts} forecastData={forecast} currency={currency} />}
 
           {activeTab === "recommendations" && <RecommendationsTable data={recommendations} currency={currency} />}
 
           {activeTab === "evaluation" && <KpiPanel key={`k${refreshKey}`} />}
 
-          {activeTab === "settings" && <SettingsView currency={currency} setCurrency={setCurrency} />}
+          {activeTab === "settings" && <SettingsView currency={currency} setCurrency={setCurrency} autoRefresh={autoRefresh} setAutoRefresh={setAutoRefresh} />}
         </div>
       </div>
     </div>

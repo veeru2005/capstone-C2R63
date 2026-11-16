@@ -317,6 +317,26 @@ def get_recommendations(conn: sqlite3.Connection = Depends(db)):
     return [dict(r) for r in rows]
 
 
+@app.get("/config", tags=["Settings"])
+def get_config():
+    """Read-only view of the active settings (shown on the dashboard's Settings page).
+    They are changed in backend/finops/config.py or with environment variables."""
+    return {
+        "billing_currency": config.BILLING_CURRENCY,
+        "opencost_url": config.OPENCOST_URL,
+        "auto_sync_minutes": AUTO_SYNC_MINUTES,
+        "stale_after_hours": config.STALE_AFTER_HOURS,
+        "pricing": {"cpu_per_core_hour": config.CPU_PRICE_PER_CORE_HOUR, "ram_per_gb_hour": config.RAM_PRICE_PER_GB_HOUR},
+        "anomaly": {"window_days": config.ANOMALY_WINDOW_DAYS, "z_threshold": config.ANOMALY_Z_THRESHOLD,
+                    "reference_spike_ratio": config.REFERENCE_SPIKE_RATIO},
+        "recommendations": {"idle_below_pct": config.IDLE_EFFICIENCY_PCT, "rightsize_below_pct": config.RIGHTSIZE_EFFICIENCY_PCT,
+                            "rightsize_headroom": config.RIGHTSIZE_HEADROOM, "commitment_min_days": config.COMMITMENT_MIN_DAYS,
+                            "commitment_discount": config.COMMITMENT_DISCOUNT},
+        "system_namespaces": sorted(config.SYSTEM_NAMESPACES),
+        "api_key_required_for_ingest": bool(API_KEY),
+    }
+
+
 @app.get("/kpis", tags=["Evaluation"])
 def get_kpis():
     p = config.REPORT_DIR / "baseline_kpis.json"
