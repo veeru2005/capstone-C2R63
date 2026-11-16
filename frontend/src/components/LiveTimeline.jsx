@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { ComposedChart, Line, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { Activity, TrendingUp, Zap } from "lucide-react";
+import { Activity, TrendingUp, Zap, CheckCircle2 } from "lucide-react";
 import { getJSON } from "../api";
 import { formatCurrency } from "../utils/currency";
 
@@ -68,25 +68,34 @@ export default function LiveTimeline({ currency, onStatus }) {
         </p>
       </div>
 
-      {data.events.map((e) => (
-        <button
-          key={`${e.type}-${e.namespace}-${e.workload}`}
-          onClick={() => setPick(`${e.namespace}/${e.workload}`)}
-          className={`w-full text-left rounded border p-3 text-xs flex items-center gap-2 ${
-            e.type === "SPIKE" ? "border-rose-800 bg-rose-950/40 text-rose-200" : "border-amber-800 bg-amber-950/30 text-amber-200"
-          }`}
-        >
-          {e.type === "SPIKE" ? <Zap className="w-4 h-4" /> : <TrendingUp className="w-4 h-4" />}
-          <b>{e.type === "SPIKE" ? "COST SPIKE" : "COST GROWING"}</b>
-          <span>
-            {e.namespace}/{e.workload}{" "}
-            {e.type === "SPIKE"
-              ? `is costing ${e.ratio?.toFixed(1)}× its normal rate since ${hhmm(e.since)}`
-              : `cost is rising about ${Math.round(e.growth_pct_per_hour)}% per hour`}
-          </span>
-          <span className="ml-auto underline">show</span>
-        </button>
-      ))}
+      {data.events.map((e) => {
+        const style = {
+          SPIKE: "border-rose-800 bg-rose-950/40 text-rose-200",
+          GROWING: "border-amber-800 bg-amber-950/30 text-amber-200",
+          RESOLVED: "border-emerald-800 bg-emerald-950/30 text-emerald-200",
+        }[e.type];
+        const Icon = { SPIKE: Zap, GROWING: TrendingUp, RESOLVED: CheckCircle2 }[e.type];
+        const label = { SPIKE: "COST SPIKE", GROWING: "COST GROWING", RESOLVED: "SPIKE RESOLVED" }[e.type];
+        const text = {
+          SPIKE: `is costing ${e.ratio?.toFixed(1)}× its normal rate since ${hhmm(e.since)}`,
+          GROWING: `cost is rising about ${Math.round(e.growth_pct_per_hour)}% per hour`,
+          RESOLVED: `back to normal at ${hhmm(e.resolved_at)} (spiked ${e.peak_ratio?.toFixed(1)}× from ${hhmm(e.since)})`,
+        }[e.type];
+        return (
+          <button
+            key={`${e.type}-${e.namespace}-${e.workload}`}
+            onClick={() => setPick(`${e.namespace}/${e.workload}`)}
+            className={`w-full text-left rounded border p-3 text-xs flex items-center gap-2 ${style}`}
+          >
+            <Icon className="w-4 h-4" />
+            <b>{label}</b>
+            <span>
+              {e.namespace}/{e.workload} {text}
+            </span>
+            <span className="ml-auto underline">show</span>
+          </button>
+        );
+      })}
 
       <div className="bg-[#1a1a1e] border border-[#28282e] rounded-md p-4 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">

@@ -27,6 +27,18 @@ def test_spike_detected_and_flat_not():
     assert res["workloads"][0]["workload"] == "spiky"  # alarms first
 
 
+def test_resolved_after_spike_ends():
+    rng = np.random.default_rng(1)
+    base = list(0.01 * rng.normal(1, 0.02, 14))
+    series = base + [0.06, 0.06, 0.06] + [0.01, 0.01, 0.01, 0.01]  # spike, then fixed
+    res = live.analyse(_tl({"fixed": series}))
+    w = res["workloads"][0]
+    assert w["status"] == "RESOLVED"
+    ev = res["events"][0]
+    assert ev["type"] == "RESOLVED" and ev["peak_ratio"] > 4
+    assert ev["since"] == w["series"][14]["t"] and ev["resolved_at"] == w["series"][17]["t"]
+
+
 def test_growth_detected_and_forecast_rises():
     ramp = [0.01 + 0.002 * i for i in range(20)]  # steady climb
     res = live.analyse(_tl({"growing": ramp}))

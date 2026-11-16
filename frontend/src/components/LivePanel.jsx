@@ -14,6 +14,7 @@ const BADGE = {
 const ALERT = {
   SPIKE: "bg-rose-600 text-white border-rose-500",
   GROWING: "bg-amber-500/20 text-amber-300 border-amber-500/40",
+  RESOLVED: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
 };
 
 // What is running on the cluster RIGHT NOW (OpenCost, last 10 minutes). Refreshes every 30 s,

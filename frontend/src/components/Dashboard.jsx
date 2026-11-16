@@ -63,6 +63,7 @@ export default function Dashboard() {
   };
 
   const [health, setHealth] = useState(null);
+  const [liveAlerts, setLiveAlerts] = useState(0);
   const [costs, setCosts] = useState([]);
   const [summary, setSummary] = useState(null);
   const [anomalies, setAnomalies] = useState([]);
@@ -95,6 +96,14 @@ export default function Dashboard() {
       setAnomalies(a);
       setForecast(f);
       setRecommendations(r);
+      // live mode: active SPIKE / GROWING alerts also count in the sidebar badge
+      if (h?.data_source === "opencost") {
+        getJSON("/live/timeline?minutes=60")
+          .then((t) => setLiveAlerts((t.events || []).filter((e) => e.type !== "RESOLVED").length))
+          .catch(() => setLiveAlerts(0));
+      } else {
+        setLiveAlerts(0);
+      }
       setLastUpdated(new Date());
       setRefreshKey((k) => k + 1);
       setError(null);
@@ -128,7 +137,7 @@ export default function Dashboard() {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden dark bg-[#121214] text-white font-sans antialiased">
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} anomalyCount={anomalies.length} />
+      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} anomalyCount={anomalies.length + liveAlerts} liveAlertCount={liveAlerts} />
 
       <div className="flex-1 flex flex-col min-w-0 h-full overflow-y-auto">
         <div className="h-12 border-b border-[#262730] px-6 flex items-center justify-between flex-shrink-0 bg-[#101012]">

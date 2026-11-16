@@ -14,13 +14,13 @@ import {
   FlaskConical,
 } from "lucide-react";
 
-export default function Sidebar({ activeTab, setActiveTab, anomalyCount = 0 }) {
+export default function Sidebar({ activeTab, setActiveTab, anomalyCount = 0, liveAlertCount = 0 }) {
   const [collapsed, setCollapsed] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   const menuItems = [
     { id: "home", label: "Overview", icon: Home },
-    { id: "live", label: "Live Cluster", icon: Radio },
+    { id: "live", label: "Live Cluster", icon: Radio, badge: liveAlertCount },
     { id: "allocation", label: "Cost Allocation", icon: BarChart3 },
     { id: "trends", label: "Spend Trends", icon: LayoutDashboard },
     { id: "anomalies", label: "Anomalies", icon: AlertTriangle, badge: anomalyCount },

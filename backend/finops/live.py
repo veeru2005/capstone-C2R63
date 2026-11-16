@@ -116,7 +116,12 @@ def analyse(tl: dict) -> dict:
         baseline = float(np.mean(normal[-BASELINE_POINTS:])) if normal else latest
 
         # growth: slope over the last 10 points, as % of the mean per hour
-        tail = rates[-10:]
+        # trend + forecast ignore spike points (replaced by the normal level), so one incident
+        # neither looks like "growth" nor bends the forecast after it has been fixed
+        clean = rates.copy()
+        for i in spike_idx:
+            clean[i] = baseline
+        tail = clean[-10:]
         growth, r2 = 0.0, 0.0
         if len(tail) >= 5 and tail.mean() > 0:
             x = np.arange(len(tail), dtype=float)
@@ -135,17 +140,31 @@ def analyse(tl: dict) -> dict:
                      "rate": max(float(a * (n - 1 + k) + b), 0.0) if n >= 5 else latest}
                     for k in range(1, FORECAST_POINTS + 1)]
 
-        recent_spike = any(i >= len(rates) - 3 for i in spike_idx)
+        # active only while the newest point is still abnormal; otherwise it is resolved
+        recent_spike = (len(rates) - 1) in spike_idx
         if recent_spike:
             # a fresh jump: a straight line through pre-spike points would wrongly predict a drop,
             # so assume the new level continues until someone fixes it
             forecast = [{**f, "rate": latest} for f in forecast]
+        # the most recent run of consecutive spike points = the current / last incident
+        ep_start = ep_end = None
+        if spike_idx:
+            ep_end = max(spike_idx)
+            ep_start = ep_end
+            while ep_start - 1 in spike_idx:
+                ep_start -= 1
+        peak_ratio = (max(float(rates[i]) for i in range(ep_start, ep_end + 1)) / baseline
+                      if ep_end is not None and baseline > 0 else None)
+
         status = None
-        if e["namespace"] in config.SYSTEM_NAMESPACES or latest < MIN_ALERT_RATE:
-            pass  # never alert on Kubernetes' own pods or on noise-level costs
-        elif recent_spike:
+        quiet = e["namespace"] in config.SYSTEM_NAMESPACES  # never alert on Kubernetes' own pods
+        if quiet:
+            pass
+        elif recent_spike and latest >= MIN_ALERT_RATE:
             status = "SPIKE"
-        elif growth >= GROWTH_PCT_PER_HOUR and r2 >= GROWTH_R2:
+        elif ep_end is not None and max(float(rates[ep_end]), baseline) >= MIN_ALERT_RATE:
+            status = "RESOLVED"  # spiked earlier in the window, back to normal now
+        elif growth >= GROWTH_PCT_PER_HOUR and r2 >= GROWTH_R2 and latest >= MIN_ALERT_RATE:
             status = "GROWING"
         w = {**{k: e[k] for k in ("namespace", "workload", "team")},
              "status": status, "latest_rate": latest, "baseline_rate": baseline,
@@ -155,11 +174,16 @@ def analyse(tl: dict) -> dict:
              "projected_day_cost": latest * 24,
              "series": pts, "forecast": forecast}
         workloads.append(w)
+        base_ev = {"namespace": e["namespace"], "workload": e["workload"]}
         if status == "SPIKE":
-            events.append({"type": "SPIKE", "namespace": e["namespace"], "workload": e["workload"],
-                           "ratio": w["ratio"], "since": pts[min(i for i in spike_idx if i >= len(rates) - 3)]["t"]})
+            events.append({"type": "SPIKE", **base_ev, "ratio": w["ratio"], "peak_ratio": peak_ratio,
+                           "since": pts[ep_start]["t"]})
+        elif status == "RESOLVED":
+            events.append({"type": "RESOLVED", **base_ev, "peak_ratio": peak_ratio, "since": pts[ep_start]["t"],
+                           "resolved_at": pts[min(ep_end + 1, len(pts) - 1)]["t"]})
         elif status == "GROWING":
-            events.append({"type": "GROWING", "namespace": e["namespace"], "workload": e["workload"],
-                           "growth_pct_per_hour": w["growth_pct_per_hour"]})
-    workloads.sort(key=lambda w: ({"SPIKE": 0, "GROWING": 1}.get(w["status"], 2), -w["latest_rate"]))
+            events.append({"type": "GROWING", **base_ev, "growth_pct_per_hour": w["growth_pct_per_hour"]})
+    order = {"SPIKE": 0, "GROWING": 1, "RESOLVED": 2}
+    events.sort(key=lambda ev: order[ev["type"]])
+    workloads.sort(key=lambda w: (order.get(w["status"], 3), -w["latest_rate"]))
     return {**{k: tl[k] for k in ("start", "end", "step_minutes")}, "events": events, "workloads": workloads}
