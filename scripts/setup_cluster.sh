@@ -25,9 +25,13 @@ fi
 kubectl config use-context "kind-$CLUSTER" >/dev/null
 fi
 
+say "Updating Helm chart repositories"
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts --force-update >/dev/null
+helm repo add opencost https://opencost.github.io/opencost-helm-chart --force-update >/dev/null
+helm repo update >/dev/null
+
 say "Installing Prometheus (OpenCost needs it)"
-helm upgrade --install prometheus prometheus \
-  --repo https://prometheus-community.github.io/helm-charts \
+helm upgrade --install prometheus prometheus-community/prometheus \
   --namespace prometheus-system --create-namespace \
   --set prometheus-pushgateway.enabled=false \
   --set alertmanager.enabled=false \
@@ -35,8 +39,7 @@ helm upgrade --install prometheus prometheus \
   --wait --timeout 10m
 
 say "Installing OpenCost"
-helm upgrade --install opencost opencost \
-  --repo https://opencost.github.io/opencost-helm-chart \
+helm upgrade --install opencost opencost/opencost \
   --namespace opencost --create-namespace --wait --timeout 10m
 
 say "Installing metrics-server (kind needs --kubelet-insecure-tls)"

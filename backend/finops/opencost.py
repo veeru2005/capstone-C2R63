@@ -88,6 +88,11 @@ def normalise(payload: dict, team_map: dict | None = None) -> tuple[list[dict], 
             bad.append(("allocation set is not an object", {"raw": str(alloc_set)[:200]}))
             continue
         for name, a in alloc_set.items():
+            # Right after OpenCost is installed it can return windows with a negative
+            # duration (start > end) and negative cost. That is "no data yet", not spend.
+            if isinstance(a, dict) and a.get("minutes") is not None and float(a["minutes"]) <= 0:
+                bad.append(("OpenCost has no complete data for this window yet (minutes <= 0)", {"name": name}))
+                continue
             try:
                 rows.append(_to_row(name, a, team_map))
             except Exception as exc:  # noqa: BLE001
@@ -106,7 +111,8 @@ def _to_row(name: str, a: dict, team_map: dict) -> dict:
         kind = props.get("controllerKind") or "unknown"
         if workload.startswith("__unallocated__"):
             workload = "__unallocated__"
-    team = labels.get("team") or labels.get("app_kubernetes_io_part_of") or team_map.get(namespace, "unassigned")
+    # explicit `team` label wins, then our namespace->team map, then the Helm part-of label
+    team = labels.get("team") or team_map.get(namespace) or labels.get("app_kubernetes_io_part_of") or "unassigned"
     if namespace == "__idle__":
         team = "__idle__"
 
@@ -166,7 +172,15 @@ def fetch_live(window: str = "10m", base_url: str | None = None, timeout: float 
         eff = r.get("total_efficiency")
         if eff is None and req:
             eff = use / req * 100
-        status = "IDLE" if (eff or 0) < config.IDLE_EFFICIENCY_PCT else (
-            "OVER-PROVISIONED" if (eff or 0) < config.RIGHTSIZE_EFFICIENCY_PCT else "OK")
+        if r["namespace"] in config.SYSTEM_NAMESPACES:
+            status = "SYSTEM"            # needed by Kubernetes/OpenCost itself — never "idle"
+        elif not req and not (r.get("ram_request_gb") or 0):
+            status = "OK"                # reserves nothing, so it cannot waste reserved capacity
+        elif (eff or 0) < config.IDLE_EFFICIENCY_PCT:
+            status = "IDLE"
+        elif (eff or 0) < config.RIGHTSIZE_EFFICIENCY_PCT:
+            status = "OVER-PROVISIONED"
+        else:
+            status = "OK"
         out.append({**r, "efficiency_pct": round(eff, 2) if eff is not None else None, "status": status})
     return sorted(out, key=lambda r: r["total_cost"], reverse=True)

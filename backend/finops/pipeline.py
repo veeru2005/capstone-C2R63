@@ -20,7 +20,9 @@ from . import anomaly, config, forecast, ingest, kpi, recommend, simulator
 from .db import init_db, session
 
 
-def analyse(db_path=None, report: bool = True) -> dict:
+def analyse(db_path=None, report: bool = True, report_dir: Path | None = None) -> dict:
+    """report_dir: live data writes to reports/live so it never overwrites the
+    frozen sandbox baselines in reports/."""
     with session(db_path) as conn:
         a_ref = anomaly.detect(conn, "reference-threshold")
         a_z = anomaly.detect(conn, "zscore")
@@ -28,7 +30,7 @@ def analyse(db_path=None, report: bool = True) -> dict:
         recs = recommend.generate(conn)
         res = kpi.measure(conn) if report else {}
     if report:
-        kpi.write_report(res)
+        kpi.write_report(res, report_dir)
     return {"anomalies_reference": len(a_ref), "anomalies_zscore": len(a_z),
             "forecast_rows": n_fc, "recommendations": len(recs), "kpis": res.get("kpis", {})}
 
@@ -68,11 +70,12 @@ def main(argv=None) -> int:
         print("Ingest failed — existing data left untouched; dashboard will show degraded mode.", file=sys.stderr)
         return 2
 
-    out = analyse(db)
+    live = args.source == "opencost"
+    out = analyse(db, report_dir=config.REPORT_DIR / "live" if live else None)
     print(json.dumps({k: v for k, v in out.items() if k != "kpis"}, indent=2))
     for name, k in out["kpis"].items():
         print(f"{name}: O2={k['O2-reference']} {k['unit']}  vs  O3={k['O3-candidate']} {k['unit']}")
-    print(f"Report: {config.REPORT_DIR / 'baseline_kpis.md'}")
+    print(f"Report: {config.REPORT_DIR / ('live' if live else '') / 'baseline_kpis.md'}")
     return 0
 
 

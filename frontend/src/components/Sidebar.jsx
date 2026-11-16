@@ -8,8 +8,7 @@ import {
   Zap,
   Settings,
   Search,
-  ChevronLeft,
-  ChevronRight,
+  Menu,
   Activity,
   Radio,
   FlaskConical,
@@ -38,16 +37,25 @@ export default function Sidebar({ activeTab, setActiveTab, anomalyCount = 0 }) {
       {/* Top Section */}
       <div>
         {/* FinOps Brand Header */}
-        <div className="h-14 flex items-center px-4 gap-2.5 border-b border-[#262730]">
-          <div className="w-8 h-8 flex items-center justify-center flex-shrink-0 bg-blue-600 rounded-lg shadow-lg shadow-blue-500/20">
-            <Activity className="w-5 h-5 text-white" strokeWidth={2.5} />
-          </div>
-
+        <div className={`h-14 flex items-center border-b border-[#262730] ${collapsed ? "justify-center" : "px-4 gap-2.5"}`}>
           {!collapsed && (
-            <span className="font-bold text-base text-white tracking-tight">
-              FinOps
-            </span>
+            <>
+              <div className="w-8 h-8 flex items-center justify-center flex-shrink-0 bg-blue-600 rounded-lg shadow-lg shadow-blue-500/20">
+                <Activity className="w-5 h-5 text-white" strokeWidth={2.5} />
+              </div>
+              <span className="font-bold text-base text-white tracking-tight flex-1">
+                FinOps
+              </span>
+            </>
           )}
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="p-1.5 rounded text-slate-300 hover:text-white hover:bg-[#1c1d22] transition-colors"
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            <Menu className="w-5 h-5" />
+          </button>
         </div>
 
         {/* Search Box */}
@@ -115,14 +123,6 @@ export default function Sidebar({ activeTab, setActiveTab, anomalyCount = 0 }) {
         >
           <Settings className="w-4 h-4 flex-shrink-0" />
           {!collapsed && <span>Settings</span>}
-        </button>
-
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="w-full flex items-center justify-center p-2 rounded hover:text-white hover:bg-[#1c1d22] transition-colors"
-          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
         </button>
       </div>
     </aside>

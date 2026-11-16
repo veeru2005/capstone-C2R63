@@ -8,7 +8,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Outfit', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        sans: ['Utendo', 'sans-serif'],
+        mono: ['Utendo', 'sans-serif'],
+        serif: ['Utendo', 'sans-serif'],
       },
       colors: {
         finops: {

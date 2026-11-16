@@ -7,6 +7,7 @@ const BADGE = {
   IDLE: "bg-rose-500/20 text-rose-400 border-rose-500/30",
   "OVER-PROVISIONED": "bg-amber-500/20 text-amber-400 border-amber-500/30",
   OK: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+  SYSTEM: "bg-slate-500/20 text-slate-300 border-slate-500/30",
 };
 
 // What is running on the cluster RIGHT NOW (OpenCost, last 10 minutes). Refreshes every 30 s,

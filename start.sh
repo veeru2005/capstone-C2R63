@@ -45,9 +45,23 @@ ensure_frontend() {
   fi
 }
 
-free_port() {  # kill whatever is still listening from a previous run
-  local pid; pid=$(lsof -ti tcp:"$1" 2>/dev/null || true)
-  [ -n "$pid" ] && { warn "Port $1 busy (pid $pid) — stopping old process"; kill $pid 2>/dev/null || true; sleep 1; }
+free_port() {  # stop a leftover run of OUR app on this port; never touch Docker
+  local pids pid cmd
+  pids=$(lsof -ti tcp:"$1" -sTCP:LISTEN 2>/dev/null || true)
+  for pid in $pids; do
+    cmd=$(ps -p "$pid" -o comm= 2>/dev/null || true)
+    case "$cmd" in
+      *uvicorn*|*python*|*node*|*kubectl*)
+        warn "Port $1 busy (old $cmd, pid $pid) — stopping it"; kill "$pid" 2>/dev/null || true; sleep 1 ;;
+      *)
+        warn "Port $1 is used by '$cmd' (pid $pid)."
+        if docker ps --format '{{.Names}} {{.Ports}}' 2>/dev/null | grep -q ":$1->"; then
+          warn "A Docker container is using it:"; docker ps --format '  {{.Names}}  {{.Ports}}' | grep ":$1->"
+          warn "Stop it first:  docker stop \$(docker ps -q --filter publish=$1)"
+        fi
+        exit 1 ;;
+    esac
+  done
   return 0
 }
 
@@ -56,7 +70,9 @@ start_backend() {
   say "Starting backend  -> http://localhost:8000/docs   (log: logs/backend.log)"
   (cd "$BE" && exec env "$@" venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000) >"$LOGS/backend.log" 2>&1 &
   PIDS+=($!)
-  for _ in $(seq 1 30); do curl -sf localhost:8000/health >/dev/null && break; sleep 0.5; done
+  for _ in $(seq 1 30); do curl -sf localhost:8000/health >/dev/null && return 0; sleep 0.5; done
+  warn "Backend did not start. Last lines of logs/backend.log:"; tail -5 "$LOGS/backend.log"
+  cleanup
 }
 
 start_frontend() {

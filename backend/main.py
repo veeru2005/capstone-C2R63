@@ -50,7 +50,7 @@ def _sync_loop():
             run = ingest.ingest_from_opencost(window="7d", retries=1)
             _sync_state["last_status"], _sync_state["message"] = run["status"], run.get("message")
             if run["status"] != "failed":
-                analyse()
+                analyse(report_dir=config.REPORT_DIR / "live")
         except Exception as exc:  # noqa: BLE001 — never let the loop die
             _sync_state["last_status"], _sync_state["message"] = "error", str(exc)
             log.exception("auto-sync failed")
@@ -336,7 +336,7 @@ def trigger_ingest(window: str = "1d"):
     from finops.pipeline import analyse
     run = ingest.ingest_from_opencost(window=window, retries=1)
     if run["status"] != "failed":
-        analyse()
+        analyse(report_dir=config.REPORT_DIR / "live")
     return run
 
 

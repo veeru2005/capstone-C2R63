@@ -97,6 +97,8 @@ def backtest(conn: sqlite3.Connection, by: str = "workload", horizon: int = 7,
     d0 = date.fromisoformat(wide.index[0])
     n = len(wide)
     origins = [o for o in range(max(min_train, n - test_days), n - horizon + 1, horizon)]
+    if not origins:  # not enough history yet (e.g. a fresh live cluster) -> no KPI-2
+        return {}
     out: dict = {}
     for name, fn in models().items():
         errs, per_group = [], {}

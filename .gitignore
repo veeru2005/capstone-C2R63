@@ -12,3 +12,4 @@ logs_start_test.txt
 .pytest_cache/
 backend/finops_live.db*
 .env
+backend/reports/live/
