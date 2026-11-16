@@ -10,6 +10,8 @@ import AnomalyTable from "./AnomalyTable";
 import ForecastChart from "./ForecastChart";
 import RecommendationsTable from "./RecommendationsTable";
 import LivePanel from "./LivePanel";
+import LiveTimeline from "./LiveTimeline";
+import HistoryNote from "./HistoryNote";
 import KpiPanel from "./KpiPanel";
 import SettingsView from "./SettingsView";
 import { API_BASE, getJSON } from "../api";
@@ -192,11 +194,19 @@ export default function Dashboard() {
 
           {activeTab === "anomalies" && (
             <div className="space-y-6">
+              <HistoryNote health={health} minDays={15} what="anomaly detection" />
+              {health?.data_source === "opencost" && <LiveTimeline currency={currency} />}
               <AnomalyTable data={anomalies} currency={currency} />
             </div>
           )}
 
-          {activeTab === "forecast" && <ForecastChart costData={recentCosts} forecastData={forecast} currency={currency} />}
+          {activeTab === "forecast" && (
+            <div className="space-y-6">
+              <HistoryNote health={health} minDays={14} what="forecasting" />
+              {health?.data_source === "opencost" && <LiveTimeline currency={currency} />}
+              <ForecastChart costData={recentCosts} forecastData={forecast} currency={currency} />
+            </div>
+          )}
 
           {activeTab === "recommendations" && <RecommendationsTable data={recommendations} currency={currency} />}
 
